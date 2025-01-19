@@ -1,9 +1,9 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import LoginPage from "./pages/LoginPage.tsx";
-import JoinPage from "./pages/JoinPage.tsx";
-import Chat from "./pages/Chat.tsx";
-import IndexPage from "./pages/WelcomePage.tsx";
+import LoginPage from "./pages/LoginPage";
+import JoinPage from "./pages/JoinPage";
+import Chat from "./pages/Chat";
+import IndexPage from "./pages/WelcomePage";
 
 function App() {
   return (
