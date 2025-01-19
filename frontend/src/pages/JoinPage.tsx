@@ -1,9 +1,50 @@
-import React from "react";
+import React, { useCallback, useReducer, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { observer } from "mobx-react";
-import UserStore from "../store/index";
 import InputForm from "../components/FormInput";
-const JoinPage = observer(() => {
+import { ActionType, InputData, InputType } from "../types/InputForm";
+const JoinPage = () => {
+  function reducer(state: InputData, action: ActionType) {
+    console.log(state);
+    switch (action.type) {
+      case InputType.LOGIN:
+        return { ...state, login: action.payload };
+      case InputType.PASSWORD:
+        return { ...state, password: action.payload };
+      default:
+        return { ...state };
+    }
+  }
+  let [dataForm, dispatch] = useReducer(reducer, { login: "", password: "" });
+  const handleLoginChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      dispatch({ payload: e.target.value, type: InputType.LOGIN });
+    },
+    []
+  );
+  console.log("render");
+  const loginProps = useMemo(
+    () => ({
+      current_value: dataForm.login,
+      handler_input: handleLoginChange,
+      text: "Логин",
+    }),
+    [dataForm.login, handleLoginChange]
+  );
+
+  const handlePasswordChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      dispatch({ payload: e.target.value, type: InputType.PASSWORD });
+    },
+    []
+  );
+  const passwordProps = useMemo(
+    () => ({
+      current_value: dataForm.password,
+      handler_input: handlePasswordChange,
+      text: "Пароль",
+    }),
+    [dataForm.password, handlePasswordChange]
+  );
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -19,18 +60,8 @@ const JoinPage = observer(() => {
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <div className="space-y-6">
-          <InputForm
-            text={"Логин"}
-            handler_input={UserStore.setLogin}
-            current_value={UserStore.user.login}
-          />
-
-          <InputForm
-            text={"Пароль"}
-            handler_input={UserStore.setPassword}
-            current_value={UserStore.user.password}
-          />
-
+          <InputForm {...loginProps} />
+          <InputForm {...passwordProps} />
           <div>
             <button
               type="submit"
@@ -53,6 +84,5 @@ const JoinPage = observer(() => {
       </div>
     </div>
   );
-});
-
+};
 export default JoinPage;
