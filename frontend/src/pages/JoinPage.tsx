@@ -54,7 +54,7 @@ const JoinPage = () => {
           className="mx-auto h-10 w-auto"
         />
         <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-          Регистрация аккаунта
+          Регистрация
         </h2>
       </div>
 
