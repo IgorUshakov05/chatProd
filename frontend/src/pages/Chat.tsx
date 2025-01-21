@@ -4,6 +4,7 @@ import style from "../style/Chat.module.css";
 import InputMessage from "../components/ChatComponent/InputMessage";
 import Setting from "../components/ChatComponent/Setting";
 import ChatMessages from "../components/ChatComponent/ChatMessages";
+
 function Chat() {
   return (
     <div className="h-lvh w-11/12 m-auto max-h-screen relative">
