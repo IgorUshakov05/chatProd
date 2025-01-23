@@ -6,8 +6,9 @@ interface ResponseJSON {
 }
 router.post("/login", async (req: Request, res: Response) => {
   try {
-    res.json({ message: "Hello world" });
+    res.status(201).json({ message: "Hello world" });
   } catch (e) {
+    res.status(401).json({ message: "Igor" });
     console.log("Ошика при логине в файле Login.ts", e);
   }
 });
