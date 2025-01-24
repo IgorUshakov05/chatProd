@@ -13,9 +13,10 @@ const express_1 = require("express");
 const router = (0, express_1.Router)();
 router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        res.json({ message: "Hello world" });
+        res.status(201).json({ message: "Hello world" });
     }
     catch (e) {
+        res.status(401).json({ message: "Igor" });
         console.log("Ошика при логине в файле Login.ts", e);
     }
 }));

@@ -6,9 +6,11 @@ import auth_router from "./Auth//Router";
 dotenv.config();
 const app: Express = express();
 const port = process.env.PORT;
+app.use(express.json())
 app.get("/", (req: Request, res: Response) => {
-  res.send("Express + TypeScript Server");
+  res.send("TypeScript Server");
 });
+
 app.use(auth_router);
 const start = async () => {
   try {

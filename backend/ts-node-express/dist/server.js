@@ -20,8 +20,9 @@ const Router_1 = __importDefault(require("./Auth//Router"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT;
+app.use(express_1.default.json());
 app.get("/", (req, res) => {
-    res.send("Express + TypeScript Server");
+    res.send("TypeScript Server");
 });
 app.use(Router_1.default);
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
