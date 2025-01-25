@@ -8,14 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const express_validator_1 = require("express-validator");
 const router = (0, express_1.Router)();
-const User_1 = __importDefault(require("../database/Request/User"));
+const User_1 = require("../database/Request/User");
+const jwt_1 = require("../token/jwt");
 router.post("/registration", [
     (0, express_validator_1.body)("mail").isEmail().withMessage("Некорректный email").normalizeEmail(),
     (0, express_validator_1.body)("password")
@@ -29,14 +27,18 @@ router.post("/registration", [
                 .status(400)
                 .json({ success: false, errorList: errors.array() });
         const { mail, password } = req.body;
-        const save_user = yield (0, User_1.default)({ mail, password });
+        const save_user = yield (0, User_1.create_user)({ mail, password });
         if (!save_user.success)
             return res.status(401).json({ save_user });
-        res.status(201).json(save_user);
+        let token = (0, jwt_1.create_jwt_token)({
+            mail: save_user.mail || "",
+            id: save_user.id || "",
+        });
+        return res.status(201).json(token);
     }
     catch (e) {
         console.error("Ошибка при регистрации в файле Registration.ts", e);
-        res.status(500).json({ success: false, error: "Ошибка сервера" }); // Серверная ошибка
+        return res.status(500).json({ success: false, error: "Ошибка сервера" });
     }
 }));
 exports.default = router;

@@ -1,7 +1,8 @@
 import { Router, Request, Response } from "express";
 import { body, validationResult } from "express-validator";
 const router = Router();
-import create_user from "../database/Request/User";
+import { create_user } from "../database/Request/User";
+import { create_jwt_token } from "../token/jwt";
 router.post(
   "/registration",
   [
@@ -20,10 +21,14 @@ router.post(
       const { mail, password } = req.body;
       const save_user = await create_user({ mail, password });
       if (!save_user.success) return res.status(401).json({ save_user });
-      res.status(201).json(save_user);
+      let token = create_jwt_token({
+        mail: save_user.mail || "",
+        id: save_user.id || "",
+      });
+      return res.status(201).json(token);
     } catch (e) {
       console.error("Ошибка при регистрации в файле Registration.ts", e);
-      return res.status(500).json({ success: false, error: "Ошибка сервера" }); // Серверная ошибка
+      return res.status(500).json({ success: false, error: "Ошибка сервера" });
     }
   }
 );

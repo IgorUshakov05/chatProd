@@ -17,11 +17,11 @@ export function encryptPassword(password: string): string {
 export function verifyPassword(
   password: string,
   salt: string,
-  hash: string
+  originalHash: string
 ): boolean {
   const derivedHash = crypto
     .pbkdf2Sync(password, salt, ITERATIONS, HASH_LENGTH, ALGORITHM)
     .toString("hex");
 
-  return derivedHash === hash;
+  return derivedHash === originalHash;
 }
