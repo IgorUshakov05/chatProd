@@ -22,6 +22,7 @@ router.post("/registration", [
 ], (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const errors = (0, express_validator_1.validationResult)(req);
+        console.log(req.body);
         if (!errors.isEmpty())
             return res
                 .status(400)
@@ -34,7 +35,7 @@ router.post("/registration", [
             mail: save_user.mail || "",
             id: save_user.id || "",
         });
-        return res.status(201).json(token);
+        return res.status(201).json(Object.assign({ success: true }, token));
     }
     catch (e) {
         console.error("Ошибка при регистрации в файле Registration.ts", e);

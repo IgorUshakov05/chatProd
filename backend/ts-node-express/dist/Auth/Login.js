@@ -34,7 +34,7 @@ router.post("/login", [
             mail: save_user.mail || "",
             id: save_user.id || "",
         });
-        return res.status(201).json(token);
+        return res.status(201).json(Object.assign({ success: true }, token));
     }
     catch (e) {
         console.error("Ошибка при регистрации в файле Registration.ts", e);

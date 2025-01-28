@@ -1,5 +1,5 @@
 export interface InputData {
-  login: string;
+  mail: string;
   password: string;
 }
 export enum InputType {

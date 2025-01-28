@@ -2,33 +2,44 @@ import React, { useCallback, useReducer, useMemo } from "react";
 import { Link } from "react-router-dom";
 import InputForm from "../components/FormInput";
 import { ActionType, InputData, InputType } from "../types/InputForm";
+import registration_user from "../api/Registration";
 const JoinPage = () => {
+  const send_form = async () => {
+    try {
+      let data = await registration_user({
+        mail: dataForm.mail,
+        password: dataForm.password,
+      });
+      console.log(data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   function reducer(state: InputData, action: ActionType) {
     console.log(state);
     switch (action.type) {
       case InputType.LOGIN:
-        return { ...state, login: action.payload };
+        return { ...state, mail: action.payload };
       case InputType.PASSWORD:
         return { ...state, password: action.payload };
       default:
         return { ...state };
     }
   }
-  let [dataForm, dispatch] = useReducer(reducer, { login: "", password: "" });
+  let [dataForm, dispatch] = useReducer(reducer, { mail: "", password: "" });
   const handleLoginChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       dispatch({ payload: e.target.value, type: InputType.LOGIN });
     },
     []
   );
-  console.log("render");
   const loginProps = useMemo(
     () => ({
-      current_value: dataForm.login,
+      current_value: dataForm.mail,
       handler_input: handleLoginChange,
       text: "Логин",
     }),
-    [dataForm.login, handleLoginChange]
+    [dataForm.mail, handleLoginChange]
   );
 
   const handlePasswordChange = useCallback(
@@ -64,6 +75,7 @@ const JoinPage = () => {
           <InputForm {...passwordProps} />
           <div>
             <button
+              onClick={send_form}
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >

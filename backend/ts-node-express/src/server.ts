@@ -3,10 +3,12 @@ import express, { Express, Request, Response } from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import auth_router from "./Auth//Router";
+import cors from "cors";
 dotenv.config();
 const app: Express = express();
+app.use(cors({ origin: ["http://localhost:3000"] }));
 const port = process.env.PORT;
-app.use(express.json())
+app.use(express.json());
 app.get("/", (req: Request, res: Response) => {
   res.send("TypeScript Server");
 });

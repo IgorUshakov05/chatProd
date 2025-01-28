@@ -14,7 +14,7 @@ const LoginPage = () => {
         return { ...state };
     }
   }
-  let [dataForm, dispatch] = useReducer(reducer, { login: "", password: "" });
+  let [dataForm, dispatch] = useReducer(reducer, { mail: "", password: "" });
   const handleLoginChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       dispatch({ payload: e.target.value, type: InputType.LOGIN });
@@ -24,11 +24,11 @@ const LoginPage = () => {
   console.log("render");
   const loginProps = useMemo(
     () => ({
-      current_value: dataForm.login,
+      current_value: dataForm.mail,
       handler_input: handleLoginChange,
       text: "Логин",
     }),
-    [dataForm.login, handleLoginChange]
+    [dataForm.mail, handleLoginChange]
   );
 
   const handlePasswordChange = useCallback(

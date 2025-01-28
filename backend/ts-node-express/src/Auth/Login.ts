@@ -25,7 +25,7 @@ router.post(
         mail: save_user.mail || "",
         id: save_user.id || "",
       });
-      return res.status(201).json(token);
+      return res.status(201).json({ success: true, ...token });
     } catch (e) {
       console.error("Ошибка при регистрации в файле Registration.ts", e);
       return res.status(500).json({ success: false, error: "Ошибка сервера" });
