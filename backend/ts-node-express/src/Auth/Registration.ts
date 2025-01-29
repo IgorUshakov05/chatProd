@@ -21,7 +21,7 @@ router.post(
           .json({ success: false, errorList: errors.array() });
       const { mail, password } = req.body;
       const save_user = await create_user({ mail, password });
-      if (!save_user.success) return res.status(401).json({ save_user });
+      if (!save_user.success) return res.status(409).json({ save_user });
       let token = create_jwt_token({
         mail: save_user.mail || "",
         id: save_user.id || "",

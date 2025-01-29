@@ -2,14 +2,11 @@ import React, { useCallback, useReducer, useMemo } from "react";
 import { Link } from "react-router-dom";
 import InputForm from "../components/FormInput";
 import { ActionType, InputData, InputType } from "../types/InputForm";
-import registration_user from "../api/Registration";
-import { useMutation } from "@tanstack/react-query";
+import { useAuthRegistration } from "../hook/Auth";
+import Loader from "../components/Loader";
 const JoinPage = () => {
   let [dataForm, dispatch] = useReducer(reducer, { mail: "", password: "" });
-  const { mutate, data, isLoading, isError } = useMutation(() =>
-    registration_user(dataForm)
-  );
-
+  let { mutate, isError, isLoading } = useAuthRegistration(dataForm);
   function reducer(state: InputData, action: ActionType) {
     console.log(state);
     switch (action.type) {
@@ -63,19 +60,26 @@ const JoinPage = () => {
         </h2>
       </div>
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        {isError && (
+          <h4 className="text-red-600">Пользователь уже существует</h4>
+        )}
         <div className="space-y-6">
           <InputForm {...loginProps} />
           <InputForm {...passwordProps} />
           <div>
-            <button
-              disabled={isLoading}
-              style={{ cursor: isLoading ? "not-allowed" : "pointer" }}
-              onClick={() => mutate()}
-              type="submit"
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Создать
-            </button>
+            {isLoading ? (
+              <Loader />
+            ) : (
+              <button
+                disabled={isLoading}
+                style={{ cursor: isLoading ? "not-allowed" : "pointer" }}
+                onClick={() => mutate()}
+                type="submit"
+                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Создать
+              </button>
+            )}
           </div>
         </div>
 

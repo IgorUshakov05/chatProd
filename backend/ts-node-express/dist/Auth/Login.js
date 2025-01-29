@@ -29,7 +29,7 @@ router.post("/login", [
         const { mail, password } = req.body;
         const save_user = yield (0, User_1.find_user)({ mail, password });
         if (!save_user.success)
-            return res.status(401).json({ save_user });
+            return res.status(404).json({ save_user });
         let token = (0, jwt_1.create_jwt_token)({
             mail: save_user.mail || "",
             id: save_user.id || "",

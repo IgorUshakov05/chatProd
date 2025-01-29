@@ -1,4 +1,4 @@
-export interface RegistrationType {
+export interface ResponseAuth {
   success: boolean;
   error?: string;
   errorList?: {
