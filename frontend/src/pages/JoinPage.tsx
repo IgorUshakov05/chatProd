@@ -3,18 +3,13 @@ import { Link } from "react-router-dom";
 import InputForm from "../components/FormInput";
 import { ActionType, InputData, InputType } from "../types/InputForm";
 import registration_user from "../api/Registration";
+import { useMutation } from "@tanstack/react-query";
 const JoinPage = () => {
-  const send_form = async () => {
-    try {
-      let data = await registration_user({
-        mail: dataForm.mail,
-        password: dataForm.password,
-      });
-      console.log(data);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  let [dataForm, dispatch] = useReducer(reducer, { mail: "", password: "" });
+  const { mutate, data, isLoading, isError } = useMutation(() =>
+    registration_user(dataForm)
+  );
+
   function reducer(state: InputData, action: ActionType) {
     console.log(state);
     switch (action.type) {
@@ -26,7 +21,6 @@ const JoinPage = () => {
         return { ...state };
     }
   }
-  let [dataForm, dispatch] = useReducer(reducer, { mail: "", password: "" });
   const handleLoginChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       dispatch({ payload: e.target.value, type: InputType.LOGIN });
@@ -68,14 +62,15 @@ const JoinPage = () => {
           Регистрация
         </h2>
       </div>
-
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <div className="space-y-6">
           <InputForm {...loginProps} />
           <InputForm {...passwordProps} />
           <div>
             <button
-              onClick={send_form}
+              disabled={isLoading}
+              style={{ cursor: isLoading ? "not-allowed" : "pointer" }}
+              onClick={() => mutate()}
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
