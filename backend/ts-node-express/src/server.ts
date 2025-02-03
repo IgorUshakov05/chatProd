@@ -2,6 +2,7 @@ import "dotenv/config";
 import express, { Express, Request, Response } from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import chat_router from "./Chat/routes";
 import auth_router from "./Auth//Router";
 import cors from "cors";
 dotenv.config();
@@ -13,7 +14,7 @@ app.get("/", (req: Request, res: Response) => {
   res.send("TypeScript Server");
 });
 
-app.use(auth_router);
+app.use(auth_router, chat_router);
 const start = async () => {
   try {
     let database = await mongoose.connect(process.env.DATABASE_URL || "");

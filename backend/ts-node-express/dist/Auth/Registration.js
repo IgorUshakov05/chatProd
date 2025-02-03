@@ -30,12 +30,14 @@ router.post("/registration", [
         const { mail, password } = req.body;
         const save_user = yield (0, User_1.create_user)({ mail, password });
         if (!save_user.success)
-            return res.status(409).json({ save_user });
+            return res.status(409).json(Object.assign({}, save_user));
         let token = (0, jwt_1.create_jwt_token)({
             mail: save_user.mail || "",
             id: save_user.id || "",
         });
-        return res.status(201).json(Object.assign({ success: true }, token));
+        return res
+            .status(201)
+            .json(Object.assign(Object.assign({ success: true }, token), { id_chat: save_user.id_chat }));
     }
     catch (e) {
         console.error("Ошибка при регистрации в файле Registration.ts", e);

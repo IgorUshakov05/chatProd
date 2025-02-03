@@ -1,11 +1,7 @@
-import mongoose, {Schema} from "mongoose";
-
+import mongoose, { Schema } from "mongoose";
+import {v4} from 'uuid'
 const UserSchema = new Schema({
-  id: {
-    type: String,
-    require: true,
-    unique: true,
-  },
+  id: { type: String, unique: true, default: () => v4() },
   mail: {
     type: String,
     require: true,
@@ -14,9 +10,10 @@ const UserSchema = new Schema({
   hash_password: {
     type: String,
     require: true,
-  }
+  },
+  chatList: [{ id: String }],
 });
 
-const User = mongoose.model('users', UserSchema)
+const User = mongoose.model("users", UserSchema);
 
-export default User
+export default User;

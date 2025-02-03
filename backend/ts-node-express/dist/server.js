@@ -16,6 +16,7 @@ require("dotenv/config");
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const routes_1 = __importDefault(require("./Chat/routes"));
 const Router_1 = __importDefault(require("./Auth//Router"));
 const cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config();
@@ -26,7 +27,7 @@ app.use(express_1.default.json());
 app.get("/", (req, res) => {
     res.send("TypeScript Server");
 });
-app.use(Router_1.default);
+app.use(Router_1.default, routes_1.default);
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let database = yield mongoose_1.default.connect(process.env.DATABASE_URL || "");

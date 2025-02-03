@@ -20,12 +20,14 @@ router.post(
           .json({ success: false, errorList: errors.array() });
       const { mail, password } = req.body;
       const save_user = await find_user({ mail, password });
-      if (!save_user.success) return res.status(404).json({ save_user });
+      if (!save_user.success) return res.status(404).json({ ...save_user });
       let token = create_jwt_token({
         mail: save_user.mail || "",
         id: save_user.id || "",
       });
-      return res.status(201).json({ success: true, ...token });
+      return res
+        .status(201)
+        .json({ success: true, ...token, id_chat: save_user.id_chat });
     } catch (e) {
       console.error("Ошибка при регистрации в файле Registration.ts", e);
       return res.status(500).json({ success: false, error: "Ошибка сервера" });
