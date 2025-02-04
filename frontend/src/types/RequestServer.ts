@@ -7,6 +7,7 @@ export interface ResponseAuth {
     path: string;
     type: string;
   };
+  id_chat?: string;
   access?: string;
   refresh: string;
 }

@@ -11,8 +11,9 @@ function App() {
       <Routes>
         <Route path="/" element={<IndexPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/chat" element={<Chat />} />
+        <Route path="/chat/:id" element={<Chat />} />
         <Route path="/join" element={<JoinPage />} />
+        <Route path="*" element={<h1>404</h1>} />
       </Routes>
     </div>
   );

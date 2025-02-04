@@ -11,7 +11,9 @@ function Chat() {
       <Setting />
 
       <div className={`${style.content} flex flex-col justify-between mx-auto`}>
-        <div className={`${style.scroll} h-full overflow-y-scroll overflow-x-hidden`}>
+        <div
+          className={`${style.scroll} h-full overflow-y-scroll overflow-x-hidden`}
+        >
           <ChatMessages />
         </div>
         <InputMessage />
