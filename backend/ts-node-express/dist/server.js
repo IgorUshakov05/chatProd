@@ -16,23 +16,44 @@ require("dotenv/config");
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const dotenv_1 = __importDefault(require("dotenv"));
-const routes_1 = __importDefault(require("./Chat/routes"));
-const Router_1 = __importDefault(require("./Auth//Router"));
 const cors_1 = __importDefault(require("cors"));
+const path_1 = __importDefault(require("path"));
+const http_1 = __importDefault(require("http"));
+const socket_io_1 = require("socket.io");
+const routes_1 = __importDefault(require("./Chat/routes"));
+const Router_1 = __importDefault(require("./Auth/Router"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
+const port = process.env.PORT || 3000;
 app.use((0, cors_1.default)({ origin: ["http://localhost:3000"] }));
-const port = process.env.PORT;
 app.use(express_1.default.json());
 app.get("/", (req, res) => {
-    res.send("TypeScript Server");
+    res.sendFile(path_1.default.join(__dirname, "dist", "index.html"));
 });
-app.use(Router_1.default, routes_1.default);
+app.use(Router_1.default);
+app.use("/chat", routes_1.default);
+const server = http_1.default.createServer(app);
+const io = new socket_io_1.Server(server, {
+    cors: {
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"],
+    },
+});
+io.on("connection", (socket) => {
+    console.log("a user connected");
+    socket.on("chat message", (msg) => {
+        console.log(msg);
+        io.emit("chat message", msg);
+    });
+    socket.on("disconnect", () => {
+        console.log("user disconnected");
+    });
+});
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let database = yield mongoose_1.default.connect(process.env.DATABASE_URL || "");
+        yield mongoose_1.default.connect(process.env.DATABASE_URL || "");
         console.log("Подключение к бд");
-        yield app.listen(port, () => {
+        server.listen(port, () => {
             console.log(`[server]: Server is running at http://localhost:${port}`);
         });
     }
