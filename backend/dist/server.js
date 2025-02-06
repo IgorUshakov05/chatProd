@@ -19,7 +19,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
 const path_1 = __importDefault(require("path"));
 const http_1 = __importDefault(require("http"));
-const socket_io_1 = require("socket.io");
+const index_1 = __importDefault(require("./Chat/Socket/index"));
 const routes_1 = __importDefault(require("./Chat/routes"));
 const Router_1 = __importDefault(require("./Auth/Router"));
 dotenv_1.default.config();
@@ -33,22 +33,7 @@ app.get("/", (req, res) => {
 app.use(Router_1.default);
 app.use("/chat", routes_1.default);
 const server = http_1.default.createServer(app);
-const io = new socket_io_1.Server(server, {
-    cors: {
-        origin: "http://localhost:3000",
-        methods: ["GET", "POST"],
-    },
-});
-io.on("connection", (socket) => {
-    console.log("a user connected");
-    socket.on("chat message", (msg) => {
-        console.log(msg);
-        io.emit("chat message", msg);
-    });
-    socket.on("disconnect", () => {
-        console.log("user disconnected");
-    });
-});
+const io = (0, index_1.default)(server);
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield mongoose_1.default.connect(process.env.DATABASE_URL || "");

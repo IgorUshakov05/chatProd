@@ -8,6 +8,7 @@ import http from "http";
 import { Server } from "socket.io";
 import chat_router from "./Chat/routes";
 import auth_router from "./Auth/Router";
+import initSocket from "./Chat/Socket";
 
 dotenv.config();
 
@@ -24,25 +25,9 @@ app.use("/chat", chat_router);
 
 const server = http.createServer(app);
 
-const io = new Server(server, {
-  cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
-  },
-});
+const io = initSocket(server);
 
-io.on("connection", (socket) => {
-  console.log("a user connected");
 
-  socket.on("chat message", (msg: string) => {
-    console.log(msg);
-    io.emit("chat message", msg);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
-  });
-});
 
 const start = async () => {
   try {
