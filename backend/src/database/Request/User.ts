@@ -1,3 +1,4 @@
+import { TokenInfo } from "./../../types/toket_type";
 import UserSchema from "../Schema/UserSchema";
 import { v4 } from "uuid";
 import { Create_User, result_Create_User } from "../../types/create_user";
@@ -62,5 +63,20 @@ export const find_user = async ({
   } catch (e) {
     console.log(e);
     return { success: false, error: "Ошибка при регистрации" };
+  }
+};
+
+export const find_user_by_token = async (
+  data: TokenInfo
+): Promise<{ success: boolean; message: string }> => {
+  try {
+    let find_user = await UserSchema.findOne({ mail: data.mail });
+    console.log(find_user);
+    if (!find_user)
+      return { success: false, message: "Пользователь не найден" };
+    return { success: true, message: "Успех!" };
+  } catch (e) {
+    console.log(e);
+    return { success: false, message: "Возникла ошибка" };
   }
 };
