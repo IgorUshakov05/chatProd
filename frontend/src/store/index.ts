@@ -1,7 +1,7 @@
 import { makeAutoObservable } from "mobx";
 
 class UserStore {
-
+  messages = [];
   constructor() {
     makeAutoObservable(this);
   }
