@@ -11,3 +11,8 @@ export interface ResponseAuth {
   access?: string;
   refresh: string;
 }
+
+export interface RaspondAuthentication {
+  success: boolean;
+  message: string;
+}

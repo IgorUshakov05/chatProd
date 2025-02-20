@@ -1,5 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
-import { login_user, registration_user } from "../api/Auth";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { login_user, registration_user, authentication } from "../api/Auth";
 import { InputData } from "../types/InputForm";
 import { useNavigate } from "react-router-dom";
 
@@ -15,6 +15,15 @@ export const useAuthRegistration = (data: InputData) => {
       navigator(`/chat/${data.data.id_chat}`);
     },
   });
+};
+
+export const useAuthorization = () => {
+  const { isLoading, isError, data, isSuccess } = useQuery({
+    queryKey: ["auth"],
+    queryFn: () => authentication(),
+  });
+
+  return { isLoading, isError, data, isSuccess };
 };
 
 export const useAuthLogin = (data: InputData) => {
