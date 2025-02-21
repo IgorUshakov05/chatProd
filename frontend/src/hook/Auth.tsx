@@ -2,7 +2,6 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { login_user, registration_user, authentication } from "../api/Auth";
 import { InputData } from "../types/InputForm";
 import { useNavigate } from "react-router-dom";
-
 export const useAuthRegistration = (data: InputData) => {
   const navigator = useNavigate();
   return useMutation(() => registration_user(data), {
@@ -12,6 +11,7 @@ export const useAuthRegistration = (data: InputData) => {
     onSuccess: (data) => {
       localStorage.setItem("access", data.data.access || "");
       localStorage.setItem("refresh", data.data.refresh || "");
+      localStorage.setItem("chat_id", data.data.id_chat || "");
       navigator(`/chat/${data.data.id_chat}`);
     },
   });
@@ -22,6 +22,7 @@ export const useAuthorization = () => {
     queryKey: ["auth"],
     queryFn: () => authentication(),
   });
+  console.log({ isLoading, isError, data, isSuccess });
 
   return { isLoading, isError, data, isSuccess };
 };
@@ -35,6 +36,7 @@ export const useAuthLogin = (data: InputData) => {
     onSuccess: (data) => {
       localStorage.setItem("access", data.data.access || "");
       localStorage.setItem("refresh", data.data.refresh || "");
+      console.log();
       navigator(`/chat/${data.data.id_chat}`);
     },
   });

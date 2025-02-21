@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuthorization } from "../hook/Auth";
 import LinkType from "../types/HeaderLinkType";
 export default function Example() {
   const [links] = useState<LinkType[]>([
@@ -7,6 +8,7 @@ export default function Example() {
     { text: "Кто сделал?", link: "#" },
     { text: "Есть вопрос?", link: "#" },
   ]);
+  let { isSuccess } = useAuthorization();
   return (
     <header>
       <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
@@ -21,20 +23,31 @@ export default function Example() {
               ChatAI
             </span>
           </Link>
-          <div className="flex items-center lg:order-2">
-            <Link
-              to="/login"
-              className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
-            >
-              Вход
-            </Link>
-            <Link
-              to="/join"
-              className="text-white bg-black hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
-            >
-              Регистрация
-            </Link>
-          </div>
+          {!isSuccess ? (
+            <div className="flex items-center lg:order-2">
+              <Link
+                to="/login"
+                className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
+              >
+                Вход
+              </Link>
+              <Link
+                to="/join"
+                className="text-white bg-black hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
+              >
+                Регистрация
+              </Link>
+            </div>
+          ) : (
+            <div className="flex items-center lg:order-2">
+              <Link
+                to="/profile"
+                className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
+              >
+                Выйти
+              </Link>
+            </div>
+          )}
           <div
             className="hidden justify-between items-center w-full lg:flex lg:w-auto lg:order-1"
             id="mobile-menu-2"

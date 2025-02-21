@@ -6,7 +6,8 @@ import { useAuthRegistration } from "../hook/Auth";
 import Loader from "../components/Loader";
 const JoinPage = () => {
   let [dataForm, dispatch] = useReducer(reducer, { mail: "", password: "" });
-  let { mutate, isError, isLoading } = useAuthRegistration(dataForm);
+  let { mutate, isError, isLoading, data } = useAuthRegistration(dataForm);
+  console.log(data, " Тут можно запихать");
   function reducer(state: InputData, action: ActionType) {
     console.log(state);
     switch (action.type) {

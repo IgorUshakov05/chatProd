@@ -7,7 +7,8 @@ import Loader from "../components/Loader";
 const LoginPage = () => {
   let [dataForm, dispatch] = useReducer(reducer, { mail: "", password: "" });
 
-  let { mutate, isLoading, isError, error } = useAuthLogin(dataForm);
+  let { mutate, isLoading, isError, error, data } = useAuthLogin(dataForm);
+  console.log(data, " Тут можно запихать");
 
   function reducer(state: InputData, action: ActionType) {
     console.log(state);

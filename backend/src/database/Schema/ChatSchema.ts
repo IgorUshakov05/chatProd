@@ -9,7 +9,7 @@ const ChatSchema = new Schema({
         default: "Bot",
       },
       text: String,
-      timestamp: { type: Date, default: Date.now },
+      timestamp: { type: Date, default: Date.now, _id: false },
     },
   ],
 });

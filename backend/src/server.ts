@@ -5,18 +5,18 @@ import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
 import http from "http";
-import { Server } from "socket.io";
+import morgan from "morgan";
 import chat_router from "./Chat/routes";
 import auth_router from "./Auth/Router";
 import initSocket from "./Chat/Socket";
-
 dotenv.config();
-
 const app: Express = express();
+
 const port = process.env.PORT || 3000;
 app.use(cors({ origin: ["http://localhost:3000"] }));
 app.use(express.json());
 
+app.use(morgan("dev"));
 app.get("/", (req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
@@ -26,8 +26,6 @@ app.use("/chat", chat_router);
 const server = http.createServer(app);
 
 const io = initSocket(server);
-
-
 
 const start = async () => {
   try {
