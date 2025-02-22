@@ -10,7 +10,7 @@ export const find_chat_by_id = async (id: string) => {
 };
 
 export const insert_message_to_chat_on_id = async (
-  id: string,
+  id: string = '',
   isBot: string = "Bot",
   message: string
 ) => {

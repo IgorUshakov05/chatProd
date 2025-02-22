@@ -1,7 +1,9 @@
 import React from "react";
 import { From } from "../../types/ChatMessages";
 import UserMessage from "./UserMessageItem";
+import { chatStore } from "../../store";
 import BotMessage from "./BotMessageItem";
+import { observer } from "mobx-react";
 function ChatMessages() {
   const markdownText = `
   # Добро пожаловать в Markdown!
@@ -74,31 +76,26 @@ function ChatMessages() {
 
   Вот и всё! 😊
   `;
+  console.log(chatStore.messages[0]);
   return (
     <div className="flex gap-5 flex-col pt-5 pb-5">
-      <UserMessage
-        message="Heawdhuawd ahgwudb a89wyd auwd8y9ayfwdhu yaw8tdf yagiwdy8tafdwygllo lorem100  a wdHeawdhuawd ahgwudb a89wyd auwd8y9ayfwdhu yaw8tdf yagiwdy8tafdwygllo lorem100  a wdHeawdhuawd ahgwudb a89wyd auwd8y9ayfwdhu yaw8tdf yagiwdy8tafdwygllo lorem100  a wdHeawdhuawd ahgwudb a89wyd auwd8y9ayfwdhu yaw8tdf yagiwdy8tafdwygllo lorem100  a wd"
-        sender={From.User}
-      />
-      <BotMessage message={markdownText} sender={From.User} />
-      <UserMessage
-        message="Heawdhuawd ahgwudb a89wyd auwd8y9ayfwdhu yaw8tdf yagiwdy8tafdwygllo lorem100  a wdHeawdhuawd ahgwudb a89wyd auwd8y9ayfwdhu yaw8tdf yagiwdy8tafdwygllo lorem100  a wdHeawdhuawd ahgwudb a89wyd auwd8y9ayfwdhu yaw8tdf yagiwdy8tafdwygllo lorem100  a wdHeawdhuawd ahgwudb a89wyd auwd8y9ayfwdhu yaw8tdf yagiwdy8tafdwygllo lorem100  a wd"
-        sender={From.User}
-      />
-      <UserMessage
-        message="Heawdhuawd ahgwudb a89wyd auwd8y9ayfwdhu yaw8tdf yagiwdy8tafdwygllo lorem100  a wdHeawdhuawd ahgwudb a89wyd auwd8y9ayfwdhu yaw8tdf yagiwdy8tafdwygllo lorem100  a wdHeawdhuawd ahgwudb a89wyd auwd8y9ayfwdhu yaw8tdf yagiwdy8tafdwygllo lorem100  a wdHeawdhuawd ahgwudb a89wyd auwd8y9ayfwdhu yaw8tdf yagiwdy8tafdwygllo lorem100  a wd"
-        sender={From.User}
-      />
-      <UserMessage
-        message="Heawdhuawd ahgwudb a89wyd auwd8y9ayfwdhu yaw8tdf yagiwdy8tafdwygllo lorem100  a wdHeawdhuawd ahgwudb a89wyd auwd8y9ayfwdhu yaw8tdf yagiwdy8tafdwygllo lorem100  a wdHeawdhuawd ahgwudb a89wyd auwd8y9ayfwdhu yaw8tdf yagiwdy8tafdwygllo lorem100  a wdHeawdhuawd ahgwudb a89wyd auwd8y9ayfwdhu yaw8tdf yagiwdy8tafdwygllo lorem100  a wd"
-        sender={From.User}
-      />
-      <UserMessage
-        message="Heawdhuawd ahgwudb a89wyd auwd8y9ayfwdhu yaw8tdf yagiwdy8tafdwygllo lorem100  a wdHeawdhuawd ahgwudb a89wyd auwd8y9ayfwdhu yaw8tdf yagiwdy8tafdwygllo lorem100  a wdHeawdhuawd ahgwudb a89wyd auwd8y9ayfwdhu yaw8tdf yagiwdy8tafdwygllo lorem100  a wdHeawdhuawd ahgwudb a89wyd auwd8y9ayfwdhu yaw8tdf yagiwdy8tafdwygllo lorem100  a wd"
-        sender={From.User}
-      />
+      {chatStore.messages.map((message, index) => {
+        if (message.sender === From.User) {
+          return (
+            <UserMessage
+              key={index}
+              text={message.text}
+              sender={From.User}
+            />
+          );
+        } else {
+          return (
+            <BotMessage text={message.text} key={index} sender={From.Bot} />
+          );
+        }
+      })}
     </div>
   );
 }
 
-export default ChatMessages;
+export default observer(ChatMessages);

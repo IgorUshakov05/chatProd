@@ -1,5 +1,12 @@
+import { From } from "../types/ChatMessages";
 import axios from "./base";
-
-export const get_messages_on_chat = (chatID: string) => {
-    // axios.get('/chat/515fbb63-7e72-4aee-a947-0c74c2d3e48e')
+export const get_messages_on_chat = async (chatID: string) => {
+  let { data } = await axios.get<{
+    success: boolean;
+    chat: {
+      message: [{ _id: String; timestamp: String; sender: From; text: string }];
+    };
+  }>(`/chat/${chatID}`);
+  console.log(data);
+  return { success: data.success, messages: data.chat?.message };
 };

@@ -18,11 +18,13 @@ export const useAuthRegistration = (data: InputData) => {
 };
 
 export const useAuthorization = () => {
-  const { isLoading, isError, data, isSuccess } = useQuery({
+  const { isLoading, isError, data, isSuccess } = useQuery<{
+    success: boolean;
+    message: string;
+  }>({
     queryKey: ["auth"],
     queryFn: () => authentication(),
   });
-  console.log({ isLoading, isError, data, isSuccess });
 
   return { isLoading, isError, data, isSuccess };
 };
@@ -36,7 +38,6 @@ export const useAuthLogin = (data: InputData) => {
     onSuccess: (data) => {
       localStorage.setItem("access", data.data.access || "");
       localStorage.setItem("refresh", data.data.refresh || "");
-      console.log();
       navigator(`/chat/${data.data.id_chat}`);
     },
   });

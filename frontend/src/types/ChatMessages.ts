@@ -1,9 +1,9 @@
 export default interface Message {
   sender: From;
-  message: string;
+  text: string;
 }
 
 export enum From {
-  Bot,
-  User,
+  Bot = 'Bot',
+  User = 'User',
 }

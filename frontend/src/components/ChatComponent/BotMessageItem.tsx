@@ -6,13 +6,13 @@ import remarkGfm from "remark-gfm";
 import Message from "../../types/ChatMessages";
 import style from "../../style/Markdown.module.css";
 
-function BotMessage({ message }: Message) {
+function BotMessage({ text }: Message) {
   return (
     <Markdown
       className={`${style.markdownText} flex gap-5 flex-col pt-5 pb-5`}
       rehypePlugins={[rehypeHighlight, remarkGfm]}
     >
-      {message}
+      {text}
     </Markdown>
   );
 }
