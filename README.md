@@ -1,46 +1,187 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![Logo](https://github.com/IgorUshakov05/Web-Chat-With-AI/blob/main/frontend/public/WebHunt.png?raw=true)
 
-## Available Scripts
 
-In the project directory, you can run:
+# Web Chat With AI
 
-### `npm start`
+Чата с использованием искусственного интеллекта.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Стек
 
-### `npm test`
+**Клиент:** React, TypeScript, MobX, MobX-React, Axios, @heroicons/react, Tailwind CSS, Highlight.js, Rehype-highlight, Remark-gfm, @tanstack/react-query, ESLint
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**Сервер:** Node.js, Express.js, Socket.IO, Cors, JsonWebToken (JWT), Morgan, UUID, Dotenv, Nodemon, Ts-node, TypeScript, Mongodb, Mongoose
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Запуск
 
-### `npm run eject`
+Клонирование проекта
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```bash
+  git clone https://github.com/IgorUshakov05/Web-Chat-With-AI.git
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Установка зависимостей и запуск сервера
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```bash
+  cd Web-Chat-With-AI/backend && npm install && npm run dev
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Установка зависимостей и запуск клиента
 
-## Learn More
+```bash
+  cd Web-Chat-With-AI/frontend && npm install && npm run dev
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Настройка axios для отправки запросов с Bearer
+
+```typescript
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: process.env.REACT_APP_SERVER_URL,
+  timeout: 10000,
+  headers: { "Content-Type": "application/json" },
+});
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("access");
+  if (token) {
+    config.headers = {
+      ...config.headers,
+      Authorization: `Bearer ${token}`,
+    };
+  }
+  return config;
+});
+export default api;
+```
+
+
+## Запросы на сервер 
+#### Запрос на регистрацию
+```typescript
+export const registration_user = async (data_user: InputData) =>
+  axios.post<ResponseAuth>("/auth/registration", data_user);
+```
+
+#### Запрос на аунтификацию (для защищенных маршрутов)
+```typescript
+export const authentication = (): Promise<RaspondAuthentication> => {
+  const token = localStorage.getItem("access");
+
+  if (!token) {
+    return Promise.reject({
+      success: false,
+      message: "Токена нет",
+    } as RaspondAuthentication);
+  }
+
+  return new Promise<RaspondAuthentication>((resolve, reject) => {
+    axios
+      .get<RaspondAuthentication>("/auth/verify-user")
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.error("Ошибка при проверке токена:", error);
+        reject({
+          success: false,
+          message: "Ошибка при проверке токена",
+        } as RaspondAuthentication);
+      });
+  });
+};
+```
+#### Запрос на вход
+```typescript
+export const login_user = async (data_user: InputData) =>
+  axios.post<ResponseAuth>("/auth/login", data_user);
+```
+
+
+#### Кастомный хук с использованием [tanstack/react-query](https://tanstack.com/query/latest)
+
+```typescript
+export const useAuthRegistration = (data: InputData) => {
+  const navigator = useNavigate();
+  return useMutation(() => registration_user(data), {
+    onError: (error: any) => {
+      console.log("Ошибка:", error.response?.data.save_user.error);
+    },
+    onSuccess: (data) => {
+      localStorage.setItem("access", data.data.access || "");
+      localStorage.setItem("refresh", data.data.refresh || "");
+      localStorage.setItem("chat_id", data.data.id_chat || "");
+      navigator(`/chat/${data.data.id_chat}`);
+    },
+  });
+};
+```
+
+#### Мемоизация редуктора ввода логина и пароля
+
+```typescript
+let [dataForm, dispatch] = useReducer(reducer, { mail: "", password: "" });
+function reducer(state: InputData, action: ActionType) {
+    console.log(state);
+    switch (action.type) {
+      case InputType.LOGIN:
+        return { ...state, mail: action.payload };
+      case InputType.PASSWORD:
+        return { ...state, password: action.payload };
+      default:
+        return { ...state };
+    }
+  }
+  const handleLoginChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      dispatch({ payload: e.target.value, type: InputType.LOGIN });
+    },
+    []
+  );
+  const loginProps = useMemo(
+    () => ({
+      current_value: dataForm.mail,
+      handler_input: handleLoginChange,
+      text: "Логин",
+    }),
+    [dataForm.mail, handleLoginChange]
+  );
+
+  const handlePasswordChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      dispatch({ payload: e.target.value, type: InputType.PASSWORD });
+    },
+    []
+  );
+  const passwordProps = useMemo(
+    () => ({
+      current_value: dataForm.password,
+      handler_input: handlePasswordChange,
+      text: "Пароль",
+    }),
+    [dataForm.password, handlePasswordChange]
+  );
+```
+## Функциональные Возможности Web-Chat-With-AI
+
+- Интерфейс Реального Времени
+- Поддержка Markdown 
+- Управление Состоянием с MobX
+- Отзывчивый Дизайн с Tailwind CSS 
+- Интеграция с AI
+- Аутентификация Пользователей
+- Навигация на Основе Маршрутов
+- Получение Данных с Axios и React Query 
+
+
+## Автор: Ушаков Игорь
+
+- [TenChat](https://tenchat.ru/FullStack)
+- [GitHub](https://github.com/IgorUshakov05)
+
+
