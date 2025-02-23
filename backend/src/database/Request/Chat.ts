@@ -1,4 +1,6 @@
 import Chat from "../Schema/ChatSchema";
+import User from "../Schema/UserSchema";
+
 export const find_chat_by_id = async (id: string) => {
   try {
     let chat = await Chat.findOne({ id }).select("message");
@@ -9,8 +11,22 @@ export const find_chat_by_id = async (id: string) => {
   }
 };
 
+export const find_all_chat_of_user = async (userID?: string) => {
+  try {
+    if (!userID) return { success: false, message: "ID не указан" };
+    let chats = await User.findOne({ id: userID });
+    if (!chats) return { success: false, message: "Пользователь не найден!" };
+    if (!chats?.chatList.length)
+      return { success: false, message: "Чатов нет!" };
+    let chatList = chats.chatList.map((chat) => chat.id);
+    let get_caht = await Chat.find({ id: { $in: chatList } });
+    return { success: true, chats: get_caht, message: "Успех!" };
+  } catch (e) {
+    return { success: false, message: "Не удалось найти чат" };
+  }
+};
 export const insert_message_to_chat_on_id = async (
-  id: string = '',
+  id: string = "",
   isBot: string = "Bot",
   message: string
 ) => {
@@ -31,5 +47,3 @@ export const insert_message_to_chat_on_id = async (
     };
   }
 };
-
-

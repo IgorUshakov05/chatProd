@@ -1,5 +1,6 @@
 import { Server } from "socket.io";
 import SocketMessage from "../../types/socket_message";
+import get_answer_ai from "../../database/Request/AI";
 
 const initSocket = (server: any) => {
   const io = new Server(server);
@@ -7,10 +8,11 @@ const initSocket = (server: any) => {
   io.on("connection", (socket) => {
     console.log("Новое подключение:", socket.id);
 
-    socket.on("chat message", (data) => {
+    socket.on("chat message", async (data) => {
       console.log(data);
       let message: SocketMessage = JSON.parse(data);
-      io.emit("chat message", message.text);
+      let ai_respond = await get_answer_ai(message.text);
+      await io.emit("chat message", JSON.stringify(ai_respond));
     });
 
     socket.on("disconnect", () => {
@@ -20,5 +22,5 @@ const initSocket = (server: any) => {
 
   return io;
 };
-
+// get_answer_ai("напиши биографию дурова!");
 export default initSocket;

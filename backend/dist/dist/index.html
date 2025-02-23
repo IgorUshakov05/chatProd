@@ -15,7 +15,8 @@
 
       socket.on("chat message", (msg) => {
         const li = document.createElement("li");
-        li.textContent = msg;
+        let message_to_json = JSON.parse(msg);
+        li.innerHTML = message_to_json.message;
         document.getElementById("messages").appendChild(li);
       });
 

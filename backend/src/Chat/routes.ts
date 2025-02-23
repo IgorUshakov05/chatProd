@@ -1,10 +1,28 @@
 import { Router, Request, Response } from "express";
 import {
+  find_all_chat_of_user,
   find_chat_by_id,
   insert_message_to_chat_on_id,
 } from "../database/Request/Chat";
-import { body, validationResult, check } from "express-validator";
+import { body, validationResult, check, Result } from "express-validator";
+import { verify_jwt_token } from "../token/jwt";
+import { TypeToken } from "../types/toket_type";
 const router = Router();
+
+router.get("/", async (req: Request, res: Response): Promise<any> => {
+  try {
+    let access = await get_bearer(req.headers.authorization)?.trim();
+    if (!access)
+      return res.status(403).json({ success: false, message: "Нет токена" });
+    let info_token = await verify_jwt_token(access, TypeToken.ACCESS);
+    if (!info_token.success) return res.status(403).json(info_token);
+    let get_chat = await find_all_chat_of_user(info_token.info?.id);
+    console.log(get_chat);
+    res.status(201).json(get_chat);
+  } catch (e) {
+    return res.status(500).json({ success: false, message: "Ошибка сервера!" });
+  }
+});
 
 router.post(
   "/:id",
@@ -63,3 +81,11 @@ export default router.get(
     }
   }
 );
+
+const get_bearer = (header: string | undefined): string | undefined => {
+  try {
+    return header?.split("Bearer")[1];
+  } catch (e) {
+    return undefined;
+  }
+};
