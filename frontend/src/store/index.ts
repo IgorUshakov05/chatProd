@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import Message, { From } from "../types/ChatMessages";
+import Message, { From, Chat } from "../types/ChatMessages";
 
 class ChatStore {
   messages: Message[] = [
@@ -80,14 +80,18 @@ class ChatStore {
     },
   ];
   chatID: string = localStorage.getItem("chat_id") || "";
+  chatList: Chat[] = [];
   constructor() {
     makeAutoObservable(this);
+  }
+  setChatList(newChatList: Chat[]) {
+    this.chatList = newChatList;
   }
   setChatID(id: string) {
     this.chatID = id;
   }
   setMessages(new_messages: Message[]) {
-    console.log(new_messages)
+    console.log(new_messages);
     this.messages = new_messages;
   }
 }

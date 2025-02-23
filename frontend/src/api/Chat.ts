@@ -1,4 +1,4 @@
-import { From } from "../types/ChatMessages";
+import { Response, From } from "../types/ChatMessages";
 import axios from "./base";
 export const get_messages_on_chat = async (chatID: string) => {
   let { data } = await axios.get<{
@@ -7,6 +7,11 @@ export const get_messages_on_chat = async (chatID: string) => {
       message: [{ _id: String; timestamp: String; sender: From; text: string }];
     };
   }>(`/chat/${chatID}`);
-  console.log(data);
   return { success: data.success, messages: data.chat?.message };
+};
+
+export const get_all_chats = async () => {
+  let { data } = await axios.get<Response>("/chat");
+  if(!data.success) throw Error("Ошибка")
+  return { success: data.success, chats: data.chats };
 };
