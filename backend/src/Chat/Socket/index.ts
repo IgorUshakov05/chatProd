@@ -6,21 +6,32 @@ const initSocket = (server: any) => {
   const io = new Server(server);
 
   io.on("connection", (socket) => {
-    console.log("Новое подключение:", socket.id);
+    console.log(socket.handshake.headers);
+    socket.on("joinRoom", ({ room }) => {
+      socket.join(room);
+      console.log("Пользователь подключился");
+      socket.emit("message", {
+        text: `Вы присоединились к комнате ${room}`,
+        room,
+      });
+    });
 
-    socket.on("chat message", async (data) => {
+    socket.on("leaveRoom", ({ room }) => {
+      socket.leave(room);
+      socket.emit("message", { text: `Вы покинули комнату ${room}`, room });
+    });
+
+    socket.on("message", (data) => {
       console.log(data);
-      let message: SocketMessage = JSON.parse(data);
-      let ai_respond = await get_answer_ai(message.text);
-      await io.emit("chat message", JSON.stringify(ai_respond));
+      io.to(data.room).emit("message", { text: data.text, room: data.room }); // Отправляем сообщение в указанную комнату
     });
 
     socket.on("disconnect", () => {
-      console.log("Клиент отключен:", socket.id);
+      console.log("Пользователь отключился");
     });
   });
 
   return io;
 };
-// get_answer_ai("напиши биографию дурова!");
+
 export default initSocket;

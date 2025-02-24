@@ -18,7 +18,7 @@ app.use(express.json());
 
 app.use(morgan("dev"));
 app.get("/", (req: Request, res: Response) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
+  res.status(201).sendFile(path.join(__dirname, "dist", "index.html"));
 });
 app.use(auth_router);
 app.use("/chat", chat_router);

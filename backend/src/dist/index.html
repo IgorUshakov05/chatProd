@@ -11,22 +11,38 @@
     <button onclick="sendMessage()">Send</button>
 
     <script>
-      const socket = io("http://localhost:4000");
+      const socket = io(window.location.href, {
+        extraHeaders: {
+          Authorization: "Bearer authorization_token_here",
+        },
+      });
 
-      socket.on("chat message", (msg) => {
+      let currentRoom = (Math.random() * 3).toString();
+
+      socket.emit("joinRoom", { room: currentRoom });
+
+      socket.on("joinRoom", (data) => {
+        console.log(data);
+        currentRoom = data.room;
+      });
+
+      socket.on("message", (data) => {
+        console.log("Получено сообщение:", data);
         const li = document.createElement("li");
-        li.textContent = msg;
+        li.textContent = data.text;
         document.getElementById("messages").appendChild(li);
       });
 
       function sendMessage() {
         const input = document.getElementById("input");
-        socket.emit(
-          "chat message",
-          JSON.stringify({ text: input.value, chat_id: "1" })
-        );
+        socket.emit("message", { room: currentRoom, text: input.value });
         input.value = "";
       }
+
+      window.addEventListener("beforeunload", () => {
+        socket.emit("leaveRoom", { room: currentRoom });
+        socket.disconnect();
+      });
     </script>
   </body>
 </html>
