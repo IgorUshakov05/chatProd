@@ -1,12 +1,12 @@
 import { Server } from "socket.io";
 import SocketMessage from "../../types/socket_message";
 import get_answer_ai from "../../database/Request/AI";
+import Middleware from "./Middleware_Auth";
 
 const initSocket = (server: any) => {
   const io = new Server(server);
-
+  io.use(Middleware);
   io.on("connection", (socket) => {
-    console.log(socket.handshake.headers);
     socket.on("joinRoom", ({ room }) => {
       socket.join(room);
       console.log("Пользователь подключился");
@@ -21,9 +21,20 @@ const initSocket = (server: any) => {
       socket.emit("message", { text: `Вы покинули комнату ${room}`, room });
     });
 
-    socket.on("message", (data) => {
+    socket.on("message", async (data: SocketMessage) => {
       console.log(data);
-      io.to(data.room).emit("message", { text: data.text, room: data.room }); // Отправляем сообщение в указанную комнату
+      io.to(data.room).emit("message", {
+        text: data.text,
+        room: data.room,
+        from: "User",
+      });
+      let messageAI = await get_answer_ai(data.text);
+      console.log(messageAI);
+      io.to(data.room).emit("message", {
+        text: messageAI.message,
+        room: data.room,
+        from: "Bot",
+      });
     });
 
     socket.on("disconnect", () => {
