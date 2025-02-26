@@ -2,6 +2,7 @@ import { Server } from "socket.io";
 import SocketMessage from "../../types/socket_message";
 import get_answer_ai from "../../database/Request/AI";
 import Middleware from "./Middleware_Auth";
+import { error } from "console";
 
 const initSocket = (server: any) => {
   const io = new Server(server);
@@ -32,6 +33,7 @@ const initSocket = (server: any) => {
       console.log(messageAI);
       io.to(data.room).emit("message", {
         text: messageAI.message,
+        error: messageAI.error,
         room: data.room,
         from: "Bot",
       });

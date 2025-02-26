@@ -29,7 +29,7 @@
       socket.on("message", (data) => {
         console.log("Получено сообщение:", data);
         const li = document.createElement("li");
-        li.textContent = data.text;
+        li.textContent = data.text || data.error;
         document.getElementById("messages").appendChild(li);
       });
 
