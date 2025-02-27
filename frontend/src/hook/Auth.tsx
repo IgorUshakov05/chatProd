@@ -24,6 +24,8 @@ export const useAuthorization = () => {
   }>({
     queryKey: ["auth"],
     queryFn: () => authentication(),
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 
   return { isLoading, isError, data, isSuccess };

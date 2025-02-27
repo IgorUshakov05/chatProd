@@ -2,15 +2,20 @@ import { Server } from "socket.io";
 import SocketMessage from "../../types/socket_message";
 import get_answer_ai from "../../database/Request/AI";
 import Middleware from "./Middleware_Auth";
-import { error } from "console";
 
 const initSocket = (server: any) => {
-  const io = new Server(server);
-  io.use(Middleware);
+  const io = new Server(server, {
+    cors: {
+      origin: "http://localhost:3000",
+      methods: ["GET", "POST"],
+    },
+  });
+  // io.use(Middleware);
   io.on("connection", (socket) => {
+    console.log(`⚡ Новый пользователь подключился: ${socket.id}`);
     socket.on("joinRoom", ({ room }) => {
       socket.join(room);
-      console.log("Пользователь подключился");
+      console.log(`Пользователь ${socket.id} вошёл в комнату ${room}`);
       socket.emit("message", {
         text: `Вы присоединились к комнате ${room}`,
         room,
@@ -29,18 +34,18 @@ const initSocket = (server: any) => {
         room: data.room,
         from: "User",
       });
-      let messageAI = await get_answer_ai(data.text);
-      console.log(messageAI);
-      io.to(data.room).emit("message", {
-        text: messageAI.message,
-        error: messageAI.error,
-        room: data.room,
-        from: "Bot",
-      });
+      // let messageAI = await get_answer_ai(data.text);
+      // console.log(messageAI);
+      // io.to(data.room).emit("message", {
+      //   text: messageAI.message,
+      //   error: messageAI.error,
+      //   room: data.room,
+      //   from: "Bot",
+      // });
     });
 
     socket.on("disconnect", () => {
-      console.log("Пользователь отключился");
+      console.log(`❌ Пользователь ${socket.id} отключился`);
     });
   });
 

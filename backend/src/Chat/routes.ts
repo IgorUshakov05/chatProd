@@ -17,7 +17,6 @@ router.get("/", async (req: Request, res: Response): Promise<any> => {
     let info_token = await verify_jwt_token(access, TypeToken.ACCESS);
     if (!info_token.success) return res.status(403).json(info_token);
     let get_chat = await find_all_chat_of_user(info_token.info?.id);
-    console.log(get_chat);
     res.status(201).json(get_chat);
   } catch (e) {
     return res.status(500).json({ success: false, message: "Ошибка сервера!" });

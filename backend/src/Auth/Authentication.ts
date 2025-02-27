@@ -9,9 +9,7 @@ export default router.get(
   async (req: Request, res: Response): Promise<any> => {
     try {
       let access = await get_bearer(req.headers.authorization)?.trim();
-      console.log(access);
       let info_token = await verify_jwt_token(access, TypeToken.ACCESS);
-      console.log(info_token);
       if (!info_token.success || !info_token.info?.mail)
         return res.status(401).json({ ...info_token });
       let user = await find_user_by_token(info_token.info);

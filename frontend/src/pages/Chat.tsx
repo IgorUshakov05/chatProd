@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import style from "../style/Chat.module.css";
 import { observer } from "mobx-react";
-import { chatStore } from "../store/index";
+import { chatStore, socketStore } from "../store/index";
 import InputMessage from "../components/ChatComponent/InputMessage";
 // import Setting from "../components/ChatComponent/Setting";
 import ChatMessages from "../components/ChatComponent/ChatMessages";
@@ -17,14 +17,25 @@ function Chat() {
     chatStore.setChatID(id);
   }
   const { data, isLoading, isError, isSuccess } = useQuery({
-    queryKey: ["message"],
+    queryKey: ["message", chatStore.chatID],
     queryFn: () => get_messages_on_chat(chatStore.chatID),
+    enabled: Boolean(chatStore.chatID),
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
-
+  useEffect(() => {
+    socketStore.connect();
+    socketStore.socket.on("message", (data) => {
+      console.log(data);
+    });
+    return () => {
+      socketStore.disconnect();
+    };
+  }, []);
   if (isError) return <Navigate to={"/"} />;
   if (data?.messages) chatStore.setMessages(data?.messages);
   return (
-    <div className="flex flex-col w-11/12 m-auto max-h-screen">
+    <div className="flex flex-col w-11/12 m-auto max-h-screen overflow-hidden">
       {isLoading && <LoadingPage />}
       <Header />
       {isSuccess && (

@@ -1,4 +1,5 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, action } from "mobx";
+import { io, Socket } from "socket.io-client";
 import Message, { From, Chat } from "../types/ChatMessages";
 
 class ChatStore {
@@ -82,13 +83,20 @@ class ChatStore {
   chatID: string = localStorage.getItem("chat_id") || "";
   chatList: Chat[] = [];
   constructor() {
-    makeAutoObservable(this);
+    makeAutoObservable(this, {
+      setMessages: action,
+      setChatID: action,
+    });
   }
   setChatList(newChatList: Chat[]) {
     this.chatList = newChatList;
   }
   setChatID(id: string) {
     this.chatID = id;
+  }
+  setOneMessage(new_message: Message) {
+    console.log(new_message);
+    this.messages = [new_message];
   }
   setMessages(new_messages: Message[]) {
     console.log(new_messages);
@@ -106,7 +114,41 @@ class AuthStore {
   }
 }
 
+class SocketConnect {
+  socket: Socket = io(process.env.REACT_APP_SERVER_URL, {
+    transports: ["websocket"],
+    reconnectionAttempts: 5,
+    reconnectionDelay: 1000,
+  });
+  message: string = localStorage.getItem("message") || "";
+  constructor() {
+    makeAutoObservable(this);
+  }
+  connect() {
+    if (!this.socket) {
+      console.log("✅ Socket подключён", this.socket);
+    }
+  }
+  typing(user_message: string) {
+    localStorage.setItem("message", user_message || "");
+    this.message = user_message;
+  }
+  clearInput() {
+    localStorage.removeItem("message");
+    this.message = "";
+  }
+  sendMessage() {
+    this.socket.emit("message", this.message);
+  }
+  disconnect() {
+    if (this.socket) {
+      this.socket.disconnect();
+      console.log("❌ Socket отключён");
+    }
+  }
+}
+const socketStore = new SocketConnect();
 const chatStore = new ChatStore();
 const authStore = new AuthStore();
 
-export { chatStore, authStore };
+export { chatStore, authStore, socketStore };

@@ -44,7 +44,6 @@ export const find_user = async ({
       split_password[1]
     );
     if (!verify_password) return { success: false, error: "Пароль неверный" };
-    console.log(find_user.chatList);
     let find_last_chat = await Chat.findOne({
       id: find_user.chatList[0].id,
     });
@@ -71,7 +70,6 @@ export const find_user_by_token = async (
 ): Promise<{ success: boolean; message: string }> => {
   try {
     let find_user = await UserSchema.findOne({ mail: data.mail });
-    console.log(find_user);
     if (!find_user)
       return { success: false, message: "Пользователь не найден" };
     return { success: true, message: "Успех!" };
