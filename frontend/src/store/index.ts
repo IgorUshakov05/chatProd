@@ -13,7 +13,8 @@ class ChatStore {
     });
   }
   setChatList(newChatList: Chat[]) {
-    this.chatList.push(...newChatList);
+    console.log(newChatList)
+    this.chatList  = newChatList;
   }
   setChatID(id: string) {
     this.chatID = id;
