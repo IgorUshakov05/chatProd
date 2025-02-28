@@ -2,6 +2,7 @@ import { Server } from "socket.io";
 import SocketMessage from "../../types/socket_message";
 import get_answer_ai from "../../database/Request/AI";
 import Middleware from "./Middleware_Auth";
+import { insert_message_to_chat_on_id } from "../../database/Request/Chat";
 
 const initSocket = (server: any) => {
   const io = new Server(server, {
@@ -19,29 +20,48 @@ const initSocket = (server: any) => {
       socket.emit("message", {
         text: `Вы присоединились к комнате ${room}`,
         room,
+        connection: true,
       });
     });
 
     socket.on("leaveRoom", ({ room }) => {
       socket.leave(room);
-      socket.emit("message", { text: `Вы покинули комнату ${room}`, room });
+      socket.emit("message", {
+        text: `Вы покинули комнату ${room}`,
+        room,
+        connection: true,
+      });
     });
 
     socket.on("message", async (data: SocketMessage) => {
+      let save_user_message = await insert_message_to_chat_on_id(
+        data.room,
+        "User",
+        data.text,
+        data.user_time
+      );
       console.log(data);
       io.to(data.room).emit("message", {
+        ...save_user_message,
         text: data.text,
-        room: data.room,
+        date_time: Date.now(),
         from: "User",
+        connect: false,
       });
-      // let messageAI = await get_answer_ai(data.text);
-      // console.log(messageAI);
-      // io.to(data.room).emit("message", {
-      //   text: messageAI.message,
-      //   error: messageAI.error,
-      //   room: data.room,
-      //   from: "Bot",
-      // });
+      let messageAI = await get_answer_ai(data.text);
+      let save_ai_message = await insert_message_to_chat_on_id(
+        data.room,
+        "Bot",
+        messageAI.message
+      );
+      console.log(messageAI);
+      io.to(data.room).emit("message", {
+        ...save_ai_message,
+        text: messageAI.message,
+        date_time: Date.now(),
+        from: "Bot",
+        connect: false,
+      });
     });
 
     socket.on("disconnect", () => {

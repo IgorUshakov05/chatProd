@@ -27,15 +27,16 @@ export const find_all_chat_of_user = async (userID?: string) => {
 };
 export const insert_message_to_chat_on_id = async (
   id: string = "",
-  isBot: string = "Bot",
-  message: string
+  isBot: "User"|"Bot" = "Bot",
+  message: string,
+  user_time?: number,
 ) => {
   try {
     let chat = await Chat.findOne({ id });
     if (!chat) {
       return { success: false, message: "Чат не найден" };
     }
-    chat.message.push({ sender: isBot, text: message });
+    chat.message.push({ sender: isBot, text: message, timestamp: user_time });
     await chat.save();
 
     return { success: true, message: "Сообщение успешно добавлено" };

@@ -1,6 +1,6 @@
 export default interface Message {
-  sender: From;
-  text: string;
+  sender: "User" | "Bot";
+  text: string
 }
 
 export enum From {
@@ -20,7 +20,16 @@ export interface Chat {
 }
 
 export interface Response {
-  success: boolean; 
-  message?: string; 
+  success: boolean;
+  message?: string;
   chats?: Chat[];
+}
+
+export interface SocketMessage {
+  text: string;
+  error: string;
+  connection: boolean;
+  room: string;
+  from: "User" | "Bot";
+  date_time: number;
 }

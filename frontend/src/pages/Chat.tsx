@@ -6,44 +6,65 @@ import InputMessage from "../components/ChatComponent/InputMessage";
 // import Setting from "../components/ChatComponent/Setting";
 import ChatMessages from "../components/ChatComponent/ChatMessages";
 import Header from "../components/Header";
-import { Navigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { get_messages_on_chat } from "../api/Chat";
 import LoadingPage from "../components/ChatComponent/Loading";
 import ChatList from "../components/ChatComponent/ChatList";
+import { SocketMessage } from "../types/ChatMessages";
 function Chat() {
-  let { id } = useParams();
-  if (id) {
-    chatStore.setChatID(id);
-  }
-  const { data, isLoading, isError, isSuccess } = useQuery({
+  const { data, isError, isLoading, isSuccess, status } = useQuery({
     queryKey: ["message", chatStore.chatID],
     queryFn: () => get_messages_on_chat(chatStore.chatID),
     enabled: Boolean(chatStore.chatID),
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
+  let { id } = useParams();
+  useEffect(() => {
+    if (id) {
+      chatStore.setChatID(id);
+    }
+  }, [id]);
+
   useEffect(() => {
     socketStore.connect();
-    socketStore.socket.on("message", (data) => {
-      console.log(data);
-    });
+
+    socketStore.socket.emit("joinRoom", { room: chatStore.chatID });
+
     return () => {
+      socketStore.socket.emit("leaveRoom", { room: chatStore.chatID });
       socketStore.disconnect();
     };
+  }, [chatStore.chatID]);
+
+  useEffect(() => {
+    socketStore.socket.on("message", (data: SocketMessage) => {
+      if (data.connection) return;
+      console.log("📩 Получено сообщение с сервера:", data);
+      chatStore.setOneMessage({ sender: data.from, text: data.text });
+    });
+
+    return () => {
+      socketStore.socket.off("message");
+    };
   }, []);
-  if (isError) return <Navigate to={"/"} />;
-  if (data?.messages) chatStore.setMessages(data?.messages);
+
+  useEffect(() => {
+    console.log("Ошибка", isError);
+    if (data?.messages) {
+      chatStore.setMessages(data.messages);
+    }
+  }, [data]);
+
   return (
-    <div className="flex flex-col w-11/12 m-auto max-h-screen overflow-hidden">
+    <div className="flex flex-col w-11/12 m-auto max-h-screen">
       {isLoading && <LoadingPage />}
       <Header />
       {isSuccess && (
-        <div className="max-h-screen h-screen relative flex justify-between max-w-screen-xl m-auto w-full px-4 lg:px-6 py-2.5 pb-12">
+        <div className="max-h-screen h-screen relative flex justify-between max-w-screen-xl m-auto w-full px-4 lg:px-6 py-2.5 overflow-y-hidden">
           <ChatList />
           <div className="w-3/4">
-            {/* <Setting /> */}
-
             <div
               className={`${style.content} flex flex-col justify-between mx-auto`}
             >
