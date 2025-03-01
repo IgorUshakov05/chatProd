@@ -4,7 +4,7 @@ import { Navigate } from "react-router-dom";
 import LoginPage from "../components/ChatComponent/Loading";
 import { authStore } from "../store";
 import { observer } from "mobx-react";
-function AuthGuard({ children }: { children: React.ReactNode }) {
+function useAuthGuard({ children }: { children: React.ReactNode }) {
   let { isLoading, data, isSuccess } = useAuthorization();
   authStore.setAuth(data?.success);
   if (isLoading) {
@@ -16,4 +16,4 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-export default observer(AuthGuard);
+export default observer(useAuthGuard);

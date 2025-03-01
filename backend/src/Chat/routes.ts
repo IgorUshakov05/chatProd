@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import {
+  create_chat,
   find_all_chat_of_user,
   find_chat_by_id,
   insert_message_to_chat_on_id,
@@ -20,6 +21,21 @@ router.get("/", async (req: Request, res: Response): Promise<any> => {
     res.status(201).json(get_chat);
   } catch (e) {
     return res.status(500).json({ success: false, message: "Ошибка сервера!" });
+  }
+});
+
+router.get("/new_chat", async (req: Request, res: Response): Promise<any> => {
+  try {
+    let access = await get_bearer(req.headers.authorization)?.trim();
+    if (!access)
+      return res.status(403).json({ success: false, message: "Нет токена" });
+    let info_token = await verify_jwt_token(access, TypeToken.ACCESS);
+    if (!info_token.success) return res.status(403).json(info_token);
+    let new_chat_url = await create_chat(info_token.info?.id);
+    if (!new_chat_url.success) return res.status(401).json(new_chat_url);
+    return res.status(201).json(new_chat_url);
+  } catch (e) {
+    res.status(501).json({ success: false, message: "Ошибка сервера" });
   }
 });
 

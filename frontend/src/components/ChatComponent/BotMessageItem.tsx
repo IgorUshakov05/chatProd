@@ -6,7 +6,7 @@ import remarkGfm from "remark-gfm";
 import Message from "../../types/ChatMessages";
 import style from "../../style/Markdown.module.css";
 
-function BotMessage({ text, ref }: Message&{ref:React.Ref<HTMLDivElement>}) {
+function BotMessage({ text, ref,success }: Message&{ref:React.Ref<HTMLDivElement>}) {
   return (
     <div ref={ref}>
       <Markdown

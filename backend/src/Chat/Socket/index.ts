@@ -2,7 +2,10 @@ import { Server } from "socket.io";
 import SocketMessage from "../../types/socket_message";
 import get_answer_ai from "../../database/Request/AI";
 import Middleware from "./Middleware_Auth";
-import { insert_message_to_chat_on_id } from "../../database/Request/Chat";
+import {
+  delete_empty_chat,
+  insert_message_to_chat_on_id,
+} from "../../database/Request/Chat";
 
 const initSocket = (server: any) => {
   const io = new Server(server, {
@@ -49,6 +52,14 @@ const initSocket = (server: any) => {
         connect: false,
       });
       let messageAI = await get_answer_ai(data.text);
+      if (!messageAI.success)
+        return io.to(data.room).emit("message", {
+          success: false,
+          text: "Ошибка сервера",
+          date_time: Date.now(),
+          from: "Bot",
+          connect: false,
+        });
       let save_ai_message = await insert_message_to_chat_on_id(
         data.room,
         "Bot",
@@ -63,7 +74,10 @@ const initSocket = (server: any) => {
         connect: false,
       });
     });
-
+    socket.on("leaveRoom", async (data) => {
+      console.log(data, " data");
+      // delete_empty_chat(data.room);
+    });
     socket.on("disconnect", () => {
       console.log(`❌ Пользователь ${socket.id} отключился`);
     });

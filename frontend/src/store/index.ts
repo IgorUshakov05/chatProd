@@ -22,6 +22,7 @@ class ChatStore {
   setOneMessage(new_message: Message) {
     runInAction(() => {
       this.messages = [...this.messages, new_message];
+      console.log(this.messages)
     });
   }
   setMessages(new_messages: Message[]) {

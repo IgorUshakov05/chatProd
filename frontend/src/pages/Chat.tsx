@@ -12,8 +12,10 @@ import { get_messages_on_chat } from "../api/Chat";
 import LoadingPage from "../components/ChatComponent/Loading";
 import ChatList from "../components/ChatComponent/ChatList";
 import { SocketMessage } from "../types/ChatMessages";
+import { useNewChat } from "../hook/NewChat";
 function Chat() {
-  const { data, isError, isLoading, isSuccess, status } = useQuery({
+  let { mutate } = useNewChat();
+  const { data, isError, isLoading, isSuccess } = useQuery({
     queryKey: ["message", chatStore.chatID],
     queryFn: () => get_messages_on_chat(chatStore.chatID),
     enabled: Boolean(chatStore.chatID),
@@ -21,12 +23,23 @@ function Chat() {
     refetchOnReconnect: false,
   });
   let { id } = useParams();
+
   useEffect(() => {
+    if (data?.status === 404) {
+      console.log("Чат не найден (404)");
+    }
     if (id) {
       chatStore.setChatID(id);
     }
   }, [id]);
-
+  useEffect(() => {
+    if (data?.success === false) {
+      mutate();
+    }
+    if (data?.messages) {
+      chatStore.setMessages(data.messages);
+    }
+  }, [data, mutate]);
   useEffect(() => {
     socketStore.connect();
 
@@ -42,20 +55,17 @@ function Chat() {
     socketStore.socket.on("message", (data: SocketMessage) => {
       if (data.connection) return;
       console.log("📩 Получено сообщение с сервера:", data);
-      chatStore.setOneMessage({ sender: data.from, text: data.text });
+      chatStore.setOneMessage({
+        sender: data.from,
+        text: data.text,
+        success: data.success,
+      });
     });
 
     return () => {
       socketStore.socket.off("message");
     };
   }, []);
-
-  useEffect(() => {
-    console.log("Ошибка", isError);
-    if (data?.messages) {
-      chatStore.setMessages(data.messages);
-    }
-  }, [data]);
 
   return (
     <div className="flex flex-col w-11/12 m-auto max-h-screen">
@@ -82,7 +92,6 @@ function Chat() {
               <InputMessage />
             </div>
           </div>
-          <div className="min-w-60"></div>
         </div>
       )}
     </div>

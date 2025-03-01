@@ -25,11 +25,34 @@ export const find_all_chat_of_user = async (userID?: string) => {
     return { success: false, message: "Не удалось найти чат" };
   }
 };
+
+export const create_chat = async (userID: string | undefined) => {
+  try {
+    let find_user = await User.findOne({ id: userID });
+    if (!find_user)
+      return { success: false, message: "Пользователь не существует" };
+    let new_chat = await Chat.create({});
+    await find_user.chatList.push({ id: new_chat.id });
+    await find_user.save();
+    return { success: true, chat_id: new_chat.id };
+  } catch (e) {
+    return { success: false, message: "Ошибка сервера" };
+  }
+};
+
+export const delete_empty_chat = async (chatID: string): Promise<void> => {
+  let find_chat = await Chat.findOne({ id: chatID });
+  if (find_chat?.message.length) {
+    await Chat.deleteOne({ id: chatID });
+  }
+  console.log(find_chat);
+};
+
 export const insert_message_to_chat_on_id = async (
   id: string = "",
-  isBot: "User"|"Bot" = "Bot",
+  isBot: "User" | "Bot" = "Bot",
   message: string,
-  user_time?: number,
+  user_time?: number
 ) => {
   try {
     let chat = await Chat.findOne({ id });
