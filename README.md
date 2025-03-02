@@ -361,7 +361,63 @@ socket.on("disconnect", () => {
 });
 ```
 
-Такой формат документации будет легко читать и использовать для разработки! Как тебе такой вариант? 🚀
+## Middleware для аутентификации
+
+Middleware проверяет JWT токен перед установкой соединения.
+
+### Проверка токена
+
+```typescript
+import type { Socket } from "socket.io";
+import { verify_jwt_token } from "../../token/jwt";
+import { TypeToken } from "../../types/toket_type";
+
+export default function Middleware(
+  socket: Socket,
+  next: (err?: Error) => void
+) {
+  try {
+    const token = getBearer(socket.handshake.auth?.Authorization);
+    
+    if (!token) {
+      const err = new Error("Authentication error");
+      (err as any).data = { message: "Токен отсутствует или невалиден" };
+      console.error("❌ Ошибка аутентификации:", err);
+      return next(err);
+    }
+
+    const verify = verify_jwt_token(token, TypeToken.ACCESS);
+    if (!verify.success) {
+      const err = new Error("Authentication error");
+      (err as any).data = { message: "Токен недействителен или истек" };
+      console.error("❌ Ошибка проверки токена:", err);
+      return next(err);
+    }
+
+    console.log("✅ Аутентификация успешна!");
+    next();
+  } catch (e) {
+    console.error("❌ Ошибка Middleware:", e);
+    const err = new Error("Server error");
+    (err as any).data = { message: "Ошибка сервера" };
+    next(err);
+  }
+}
+
+const getBearer = (header?: string): string | undefined => {
+  if (!header || !header.startsWith("Bearer ")) return undefined;
+  return header.split("Bearer ")[1].trim();
+};
+```
+
+### События WebSocket
+
+-   `joinRoom`: Присоединение к комнате
+-   `leaveRoom`: Выход из комнаты
+-   `message`: Отправка сообщения
+-   `disconnect`: Отключение пользователя
+
+
 ## Функциональные Возможности Web-Chat-With-AI
 
 - Интерфейс Реального Времени
