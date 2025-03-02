@@ -31,6 +31,22 @@ export const create_chat = async (userID: string | undefined) => {
     let find_user = await User.findOne({ id: userID });
     if (!find_user)
       return { success: false, message: "Пользователь не существует" };
+    let chat_ids = find_user.chatList.map((chat) => chat.id);
+    let empty_chats = await Chat.find({
+      id: { $in: chat_ids },
+      message: { $size: 0 },
+    });
+
+    if (empty_chats.length > 0) {
+      let empty_chat_ids = empty_chats.map((chat) => chat.id);
+      console.log("Удаляем пустые чаты:", empty_chat_ids);
+
+      await Chat.deleteMany({ id: { $in: empty_chat_ids } });
+      find_user.chatList = find_user.chatList.filter(
+        (chat) => !empty_chat_ids.includes(chat.id)
+      );
+      await find_user.save();
+    }
     let new_chat = await Chat.create({});
     await find_user.chatList.push({ id: new_chat.id });
     await find_user.save();
@@ -38,14 +54,6 @@ export const create_chat = async (userID: string | undefined) => {
   } catch (e) {
     return { success: false, message: "Ошибка сервера" };
   }
-};
-
-export const delete_empty_chat = async (chatID: string): Promise<void> => {
-  let find_chat = await Chat.findOne({ id: chatID });
-  if (find_chat?.message.length) {
-    await Chat.deleteOne({ id: chatID });
-  }
-  console.log(find_chat);
 };
 
 export const insert_message_to_chat_on_id = async (

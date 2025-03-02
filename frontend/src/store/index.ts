@@ -13,8 +13,8 @@ class ChatStore {
     });
   }
   setChatList(newChatList: Chat[]) {
-    console.log(newChatList)
-    this.chatList  = newChatList;
+    console.log(newChatList);
+    this.chatList = newChatList;
   }
   setChatID(id: string) {
     this.chatID = id;
@@ -22,7 +22,7 @@ class ChatStore {
   setOneMessage(new_message: Message) {
     runInAction(() => {
       this.messages = [...this.messages, new_message];
-      console.log(this.messages)
+      console.log(this.messages);
     });
   }
   setMessages(new_messages: Message[]) {
@@ -43,6 +43,9 @@ class AuthStore {
 class SocketConnect {
   socket: Socket = io(process.env.REACT_APP_SERVER_URL, {
     transports: ["websocket"],
+    auth: {
+      Authorization: `Bearer ${localStorage.getItem("access")}`,
+    },
     reconnectionAttempts: 5,
     reconnectionDelay: 1000,
     autoConnect: false,

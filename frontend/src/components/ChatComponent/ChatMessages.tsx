@@ -21,11 +21,23 @@ function ChatMessages() {
       {chatStore.messages.map((message, index) => {
         if (message.sender === From.User) {
           return (
-            <UserMessage key={index} text={message.text} ref={messagesEndRef} sender={From.User} />
+            <UserMessage
+              key={index}
+              text={message.text}
+              timestamp={message.timestamp}
+              ref={messagesEndRef}
+              sender={From.User}
+            />
           );
         } else {
           return (
-            <BotMessage ref={messagesEndRef} text={message.text} key={index} sender={From.Bot} />
+            <BotMessage
+              timestamp={message.timestamp}
+              ref={messagesEndRef}
+              text={message.text}
+              key={index}
+              sender={From.Bot}
+            />
           );
         }
       })}

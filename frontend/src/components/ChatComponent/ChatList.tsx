@@ -1,6 +1,6 @@
 import React from "react";
 import { chatStore } from "../../store";
-import { get_all_chats,  } from "../../api/Chat";
+import { get_all_chats } from "../../api/Chat";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../Loader";
 import NewChat from "./NewChat";
@@ -11,7 +11,6 @@ export default function ChatList() {
     refetchOnReconnect: false,
   });
 
-  
   chatStore.setChatList(data?.chats || []);
   if (isLoading) {
     return <Loader />;
@@ -29,7 +28,7 @@ export default function ChatList() {
     );
   }
   return (
-    <ul className="flex flex-col gap-0.5 min-w-60 overflow-y-scroll">
+    <ul className="flex flex-col gap-0.5 min-w-60 overflow-y-auto">
       <NewChat />
       {chatStore.chatList.map((chat, index) => (
         <li key={index}>

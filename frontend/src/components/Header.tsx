@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import LinkType from "../types/HeaderLinkType";
 import { authStore } from "../store";
+import { useNewChat } from "../hook/NewChat";
 export default function Header() {
+  let { mutate } = useNewChat();
   const [links] = useState<LinkType[]>([
     { text: "Зачем?", link: "#" },
-    { text: "Кто сделал?", link: "#" },
-    { text: "Есть вопрос?", link: "#" },
+    { text: "Кто сделал?", link: "/developer" },
+    { text: "Есть вопрос?", link: "/contact" },
   ]);
   return (
     <header className="w-full">
@@ -25,12 +27,12 @@ export default function Header() {
 
           <div className="flex items-center lg:order-2">
             {authStore.isAuth ? (
-              <Link
-                to="/profile"
+              <button
+                onClick={() => mutate()}
                 className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
               >
-                Выйти
-              </Link>
+                Чат
+              </button>
             ) : (
               <>
                 <Link

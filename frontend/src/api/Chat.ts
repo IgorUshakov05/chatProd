@@ -6,7 +6,7 @@ export const get_messages_on_chat = async (chatID: string) => {
       success: boolean;
       chat: {
         message: [
-          { _id: string; timestamp: string; sender: From; text: string }
+          { _id: string; timestamp: number; sender: From; text: string }
         ];
       };
     }>(`/chat/${chatID}`);

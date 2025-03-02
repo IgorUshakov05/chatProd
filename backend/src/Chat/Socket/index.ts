@@ -3,7 +3,6 @@ import SocketMessage from "../../types/socket_message";
 import get_answer_ai from "../../database/Request/AI";
 import Middleware from "./Middleware_Auth";
 import {
-  delete_empty_chat,
   insert_message_to_chat_on_id,
 } from "../../database/Request/Chat";
 
@@ -14,7 +13,7 @@ const initSocket = (server: any) => {
       methods: ["GET", "POST"],
     },
   });
-  // io.use(Middleware);
+  io.use(Middleware);
   io.on("connection", (socket) => {
     console.log(`⚡ Новый пользователь подключился: ${socket.id}`);
     socket.on("joinRoom", ({ room }) => {
@@ -47,7 +46,7 @@ const initSocket = (server: any) => {
       io.to(data.room).emit("message", {
         ...save_user_message,
         text: data.text,
-        date_time: Date.now(),
+        timestamp: Date.now(),
         from: "User",
         connect: false,
       });
@@ -56,7 +55,7 @@ const initSocket = (server: any) => {
         return io.to(data.room).emit("message", {
           success: false,
           text: "Ошибка сервера",
-          date_time: Date.now(),
+          timestamp: Date.now(),
           from: "Bot",
           connect: false,
         });
@@ -69,15 +68,21 @@ const initSocket = (server: any) => {
       io.to(data.room).emit("message", {
         ...save_ai_message,
         text: messageAI.message,
-        date_time: Date.now(),
+        timestamp: Date.now(),
         from: "Bot",
         connect: false,
       });
     });
-    socket.on("leaveRoom", async (data) => {
-      console.log(data, " data");
-      // delete_empty_chat(data.room);
+    socket.on("leaveRoom", async ({ room }) => {
+      socket.leave(room);
+      console.log(`Пользователь ${socket.id} покинул комнату ${room}`);
+      socket.emit("message", {
+        text: `Вы покинули комнату ${room}`,
+        room,
+        connection: true,
+      });
     });
+
     socket.on("disconnect", () => {
       console.log(`❌ Пользователь ${socket.id} отключился`);
     });

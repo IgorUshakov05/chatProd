@@ -1,7 +1,8 @@
 export default interface Message {
   sender: "User" | "Bot";
-  text: string
-  success?: boolean
+  text: string;
+  timestamp: number;
+  success?: boolean;
 }
 
 export enum From {
@@ -9,15 +10,10 @@ export enum From {
   User = "User",
 }
 
-interface Text {
-  sender: string;
-  text: string;
-  _id: string;
-  timestamp: string;
-}
+
 export interface Chat {
   id: string;
-  message: Text[];
+  message: Message[];
 }
 
 export interface Response {
@@ -37,5 +33,5 @@ export interface SocketMessage {
   success: boolean;
   room: string;
   from: "User" | "Bot";
-  date_time: number;
+  timestamp: number;
 }

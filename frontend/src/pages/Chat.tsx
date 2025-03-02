@@ -42,6 +42,9 @@ function Chat() {
   }, [data, mutate]);
   useEffect(() => {
     socketStore.connect();
+    socketStore.socket.on("error", (err) => {
+      console.error("Ошибка от сервера:", err.message);
+    });
 
     socketStore.socket.emit("joinRoom", { room: chatStore.chatID });
 
@@ -57,6 +60,7 @@ function Chat() {
       console.log("📩 Получено сообщение с сервера:", data);
       chatStore.setOneMessage({
         sender: data.from,
+        timestamp: data.timestamp,
         text: data.text,
         success: data.success,
       });
@@ -73,8 +77,14 @@ function Chat() {
       <Header />
       {isSuccess && (
         <div className="max-h-screen h-screen relative flex justify-between max-w-screen-xl m-auto w-full px-4 lg:px-6 py-2.5 overflow-y-hidden">
-          <ChatList />
-          <div className="w-3/4">
+          {/* ChatList будет скрыт на мобильных устройствах */}
+          <div className="lg:block hidden w-1/4">
+            <ChatList />
+          </div>
+
+          <div className="w-full lg:w-3/4">
+            {" "}
+            {/* на мобильных устройствах занимать всю ширину */}
             <div
               className={`${style.content} flex flex-col justify-between mx-auto`}
             >
