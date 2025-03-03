@@ -18,7 +18,7 @@ export const find_all_chat_of_user = async (userID?: string) => {
     if (!chats) return { success: false, message: "Пользователь не найден!" };
     if (!chats?.chatList.length)
       return { success: false, message: "Чатов нет!" };
-    let chatList = chats.chatList.map((chat) => chat.id);
+    let chatList = chats.chatList.map((chat: any) => chat.id);
     let get_caht = await Chat.find({ id: { $in: chatList } });
     return { success: true, chats: get_caht, message: "Успех!" };
   } catch (e) {
@@ -31,19 +31,19 @@ export const create_chat = async (userID: string | undefined) => {
     let find_user = await User.findOne({ id: userID });
     if (!find_user)
       return { success: false, message: "Пользователь не существует" };
-    let chat_ids = find_user.chatList.map((chat) => chat.id);
+    let chat_ids = find_user.chatList.map((chat: any) => chat.id);
     let empty_chats = await Chat.find({
       id: { $in: chat_ids },
       message: { $size: 0 },
     });
 
     if (empty_chats.length > 0) {
-      let empty_chat_ids = empty_chats.map((chat) => chat.id);
+      let empty_chat_ids = empty_chats.map((chat: any) => chat.id);
       console.log("Удаляем пустые чаты:", empty_chat_ids);
 
       await Chat.deleteMany({ id: { $in: empty_chat_ids } });
       find_user.chatList = find_user.chatList.filter(
-        (chat) => !empty_chat_ids.includes(chat.id)
+        (chat: any) => !empty_chat_ids.includes(chat.id)
       );
       await find_user.save();
     }

@@ -19,21 +19,23 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
 const path_1 = __importDefault(require("path"));
 const http_1 = __importDefault(require("http"));
-const index_1 = __importDefault(require("./Chat/Socket/index"));
+const morgan_1 = __importDefault(require("morgan"));
 const routes_1 = __importDefault(require("./Chat/routes"));
 const Router_1 = __importDefault(require("./Auth/Router"));
+const Socket_1 = __importDefault(require("./Chat/Socket"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT || 3000;
 app.use((0, cors_1.default)({ origin: ["http://localhost:3000"] }));
 app.use(express_1.default.json());
+app.use((0, morgan_1.default)("dev"));
 app.get("/", (req, res) => {
-    res.sendFile(path_1.default.join(__dirname, "dist", "index.html"));
+    res.status(201).sendFile(path_1.default.join(__dirname, "dist", "index.html"));
 });
 app.use(Router_1.default);
 app.use("/chat", routes_1.default);
 const server = http_1.default.createServer(app);
-const io = (0, index_1.default)(server);
+const io = (0, Socket_1.default)(server);
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield mongoose_1.default.connect(process.env.DATABASE_URL || "");

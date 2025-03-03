@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.find_user = exports.create_user = void 0;
+exports.find_user_by_token = exports.find_user = exports.create_user = void 0;
 const UserSchema_1 = __importDefault(require("../Schema/UserSchema"));
 const UserSchema_2 = __importDefault(require("../Schema/UserSchema"));
 const ChatSchema_1 = __importDefault(require("../Schema/ChatSchema"));
@@ -49,7 +49,6 @@ const find_user = (_a) => __awaiter(void 0, [_a], void 0, function* ({ mail, pas
         let verify_password = yield (0, HashPassword_1.verifyPassword)(password, split_password[0], split_password[1]);
         if (!verify_password)
             return { success: false, error: "Пароль неверный" };
-        console.log(find_user.chatList);
         let find_last_chat = yield ChatSchema_1.default.findOne({
             id: find_user.chatList[0].id,
         });
@@ -72,3 +71,16 @@ const find_user = (_a) => __awaiter(void 0, [_a], void 0, function* ({ mail, pas
     }
 });
 exports.find_user = find_user;
+const find_user_by_token = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let find_user = yield UserSchema_1.default.findOne({ mail: data.mail });
+        if (!find_user)
+            return { success: false, message: "Пользователь не найден" };
+        return { success: true, message: "Успех!" };
+    }
+    catch (e) {
+        console.log(e);
+        return { success: false, message: "Возникла ошибка" };
+    }
+});
+exports.find_user_by_token = find_user_by_token;

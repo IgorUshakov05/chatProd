@@ -44,7 +44,7 @@ const ChatSchema = new mongoose_1.Schema({
                 default: "Bot",
             },
             text: String,
-            timestamp: { type: Date, default: Date.now },
+            timestamp: { type: Date, default: Date.now, _id: false },
         },
     ],
 });

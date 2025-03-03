@@ -12,6 +12,7 @@ import initSocket from "./Chat/Socket";
 dotenv.config();
 const app: Express = express();
 
+
 const port = process.env.PORT || 3000;
 app.use(cors({ origin: ["http://localhost:3000"] }));
 app.use(express.json());

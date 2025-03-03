@@ -6,7 +6,7 @@ import { useNewChat } from "../hook/NewChat";
 export default function Header() {
   let { mutate } = useNewChat();
   const [links] = useState<LinkType[]>([
-    { text: "Зачем?", link: "#" },
+    { text: "Зачем?", link: "/what" },
     { text: "Кто сделал?", link: "/developer" },
     { text: "Есть вопрос?", link: "/contact" },
   ]);

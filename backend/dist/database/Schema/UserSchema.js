@@ -46,7 +46,11 @@ const UserSchema = new mongoose_1.Schema({
         type: String,
         require: true,
     },
-    chatList: [{ id: String }],
+    chatList: [
+        {
+            id: { type: String, required: true },
+        },
+    ],
 });
 const User = mongoose_1.default.model("users", UserSchema);
 exports.default = User;

@@ -1,14 +1,10 @@
-import type { Socket } from "socket.io";
 import { verify_jwt_token } from "../../token/jwt";
 import { TypeToken } from "../../types/toket_type";
 
-export default function Middleware(
-  socket: Socket,
-  next: (err?: Error) => void
-) {
+export default function Middleware(socket: any, next: (err?: Error) => void) {
   try {
     const token = getBearer(socket.handshake.auth?.Authorization);
-    
+
     if (!token) {
       const err = new Error("Authentication error");
       (err as any).data = { message: "Токен отсутствует или невалиден" };
