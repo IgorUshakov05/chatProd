@@ -3,7 +3,6 @@ import style from "../style/Chat.module.css";
 import { observer } from "mobx-react";
 import { chatStore, socketStore } from "../store/index";
 import InputMessage from "../components/ChatComponent/InputMessage";
-// import Setting from "../components/ChatComponent/Setting";
 import ChatMessages from "../components/ChatComponent/ChatMessages";
 import Header from "../components/Header";
 import { useParams } from "react-router-dom";
@@ -15,7 +14,7 @@ import { SocketMessage } from "../types/ChatMessages";
 import { useNewChat } from "../hook/NewChat";
 function Chat() {
   let { mutate } = useNewChat();
-  const { data, isError, isLoading, isSuccess } = useQuery({
+  const { data, isLoading, isSuccess } = useQuery({
     queryKey: ["message", chatStore.chatID],
     queryFn: () => get_messages_on_chat(chatStore.chatID),
     enabled: Boolean(chatStore.chatID),

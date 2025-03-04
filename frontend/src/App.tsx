@@ -8,6 +8,7 @@ import AuthGuard from "./hook/GuardRote";
 import Contact from "./pages/Contact";
 import AboutMePage from "./pages/AboutDeveloper";
 import Poprikolu from "./pages/Whats";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
         <Route path="/developer" element={<AboutMePage />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/what" element={<Poprikolu />} />
-        <Route path="*" element={<h1>404</h1>} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );

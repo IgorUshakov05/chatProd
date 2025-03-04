@@ -1,6 +1,6 @@
 import { makeAutoObservable, action, runInAction } from "mobx";
 import { io, Socket } from "socket.io-client";
-import Message, { From, Chat } from "../types/ChatMessages";
+import Message, { Chat } from "../types/ChatMessages";
 
 class ChatStore {
   messages: Message[] = [];

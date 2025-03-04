@@ -21,7 +21,7 @@ export default function Header() {
               alt="Flowbite Logo"
             />
             <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-              ChatAI
+              Hunt AI
             </span>
           </Link>
 
