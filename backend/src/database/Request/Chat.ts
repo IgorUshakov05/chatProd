@@ -1,13 +1,30 @@
 import Chat from "../Schema/ChatSchema";
 import User from "../Schema/UserSchema";
 
+import { Types, Document } from "mongoose";
+
+interface IMessage {
+  sender: string;
+  timestamp: NativeDate;
+  text?: string | null;
+}
+
+interface IChat extends Document {
+  id: string;
+  message: IMessage[];
+}
+
+// Модифицированная функция для поиска чата
 export const find_chat_by_id = async (id: string) => {
   try {
+    // Применяем правильную типизацию для найденного чата
     let chat = await Chat.findOne({ id }).select("message");
-    if (!chat) return { success: false, message: "Чат не найден" };
+    if (!chat) return { success: false, message: "Чат не найден", chat: [] };
+
+    // Возвращаем найденный чат
     return { success: true, chat, message: "Успех!" };
   } catch (e) {
-    return { success: false, message: "Не удалось найти чат" };
+    return { success: false, message: "Не удалось найти чат", chat: [] };
   }
 };
 
@@ -17,12 +34,12 @@ export const find_all_chat_of_user = async (userID?: string) => {
     let chats = await User.findOne({ id: userID });
     if (!chats) return { success: false, message: "Пользователь не найден!" };
     if (!chats?.chatList.length)
-      return { success: false, message: "Чатов нет!" };
+      return { success: false, message: "Чатов нет!", chats: [] };
     let chatList = chats.chatList.map((chat: any) => chat.id);
     let get_caht = await Chat.find({ id: { $in: chatList } });
     return { success: true, chats: get_caht, message: "Успех!" };
   } catch (e) {
-    return { success: false, message: "Не удалось найти чат" };
+    return { success: false, message: "Не удалось найти чат", chats: [] };
   }
 };
 
