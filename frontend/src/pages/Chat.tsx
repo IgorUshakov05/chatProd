@@ -71,13 +71,13 @@ function Chat() {
   }, []);
 
   return (
-    <div className="flex flex-col w-11/12 m-auto max-h-screen">
+    <div className="flex flex-col m-auto max-h-screen">
       {isLoading && <LoadingPage />}
       <Header />
       {isSuccess && (
         <div className="max-h-screen h-screen relative flex justify-between max-w-screen-xl m-auto w-full px-4 lg:px-6 py-2.5 overflow-y-hidden">
           {/* ChatList будет скрыт на мобильных устройствах */}
-          <div className="lg:block hidden w-1/4">
+          <div className="lg:block hidden w-1/4 max-h-full overflow-y-scroll beautiful-scrollbar">
             <ChatList />
           </div>
 

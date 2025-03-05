@@ -10,9 +10,16 @@ export default async function get_answer_ai(
   try {
     // Инициализируем новую сессию чата для каждого запроса
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const chatSession = model.startChat({ history: [] });
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+      tools: [
+        {
+          codeExecution: {},
+        },
+      ],
+    });
 
+    const chatSession = model.startChat({ history: [] });
     // Получаем историю чата
     let history: Content[] = await chatSession.getHistory();
     console.log(history[history.length - 1]);
@@ -36,7 +43,6 @@ export default async function get_answer_ai(
 
     // Отправляем сообщение
     const result = await chatSession.sendMessage(prompt);
-
     // Извлекаем и возвращаем текст ответа
     const responseText = result.response.text();
     console.log(responseText);

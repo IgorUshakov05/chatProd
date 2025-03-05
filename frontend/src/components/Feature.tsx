@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChatBubbleLeftRightIcon, CodeBracketIcon, UserCircleIcon, ShieldCheckIcon, DevicePhoneMobileIcon, BoltIcon } from '@heroicons/react/20/solid';
+import { ClockIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
 
 const features = [
   {
@@ -32,7 +33,18 @@ const features = [
     description: 'Обеспечивает удобный доступ к чатам и страницам приложения.',
     icon: UserCircleIcon,
   },
+  {
+    name: 'История Чатов',
+    description: 'Все ваши чаты и сообщения сохраняются и могут быть просмотрены в любой момент.',
+    icon: ClockIcon,
+  },
+  {
+    name: 'Память Бота', // Новый элемент
+    description: 'Бот запоминает информацию о пользователе и его предпочтениях, чтобы давать более персонализированные ответы в будущих взаимодействиях.',
+    icon: GlobeAltIcon, // Используем подходящую иконку для памяти, например, иконку памяти
+  },
 ];
+
 
 export default function Feature() {
   return (

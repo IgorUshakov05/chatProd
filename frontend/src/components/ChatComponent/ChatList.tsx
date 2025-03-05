@@ -18,7 +18,7 @@ export default function ChatList() {
   if (isError) {
     return (
       <div
-        className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative max-h-max min-w-60"
+        className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative max-h-full max-w-full overflow-y-auto"
         role="alert"
       >
         <strong className="font-bold">Ошибка!</strong>
@@ -47,7 +47,8 @@ export default function ChatList() {
           >
             {chat.message[chat.message.length - 1]?.text
               ?.slice(0, 25)
-              .replace("#", "") || "Пустой чат"}
+              .replace("#", "")
+              .replace("```", "") || "Пустой чат"}
           </a>
         </li>
       ))}

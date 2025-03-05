@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { observer } from "mobx-react";
 import { socketStore, chatStore } from "../../store";
 
 function InputMessage() {
-  // Обработчик для нажатия клавиши "Enter"
+  const input = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => {
+    if (input.current) {
+      input.current.focus();
+    }
+  }, []);
   function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === "Enter" && socketStore.message.trim().length > 0) {
+    if (
+      e.key === "Enter" &&
+      !e.shiftKey &&
+      socketStore.message.trim().length > 0
+    ) {
       socketStore.sendMessage(chatStore.chatID);
       socketStore.clearInput();
     }
@@ -23,14 +32,15 @@ function InputMessage() {
   return (
     <div>
       <div className="flex justify-between items-center gap-4">
-        <input
-          type="text"
+        <textarea
           placeholder="Enter your message"
           value={socketStore.message}
-          onKeyDown={handleKeyDown} // Обработчик нажатия клавиши "Enter"
-          onInput={(e) => socketStore.typing(e.currentTarget.value)} // Обновление состояния
-          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
+          ref={input}
+          onKeyDown={handleKeyDown}
+          onInput={(e) => socketStore.typing(e.currentTarget.value)}
+          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none max-h-12 resize-none"
         />
+
         <button
           disabled={socketStore.message.length <= 0}
           className="disabled:opacity-30"

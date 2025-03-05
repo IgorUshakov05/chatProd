@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import LinkType from "../types/HeaderLinkType";
 import { authStore } from "../store";
 import { useNewChat } from "../hook/NewChat";
+import { ChatBubbleLeftRightIcon } from "@heroicons/react/24/outline";
 export default function Header() {
   let { mutate } = useNewChat();
   const [links] = useState<LinkType[]>([
@@ -29,9 +30,14 @@ export default function Header() {
             {authStore.isAuth ? (
               <button
                 onClick={() => mutate()}
-                className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
+                className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800 flex items-center"
               >
-                Чат
+                <ChatBubbleLeftRightIcon
+                  aria-hidden="true"
+                  className="size-6 text-black mr-2" // Добавлен отступ справа для расстояния между иконкой и текстом
+                />
+                <span className="hidden sm:inline">Новый чат</span>{" "}
+                {/* Скрыть на мобильных, показать на экранах от sm */}
               </button>
             ) : (
               <>
