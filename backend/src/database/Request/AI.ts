@@ -28,7 +28,7 @@ export default async function get_answer_ai(
     let { success, chat } = await find_chat_by_id(chatID);
     if (success && chat) {
       if (chat && "message" in chat && Array.isArray(chat.message)) {
-        chat.message.forEach((item) => {
+        chat.message.forEach((item: any) => {
           history.push({
             role: item.sender === "User" ? "user" : "model",
             parts: [{ text: item.text || "" }],
