@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
 import style from "../style/Chat.module.css";
 import { observer } from "mobx-react";

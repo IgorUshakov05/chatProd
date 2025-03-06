@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Header from "../components/Header";
 import CTAction from "../components/CTA";
 import { observer } from "mobx-react";
