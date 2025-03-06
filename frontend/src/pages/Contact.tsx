@@ -1,5 +1,5 @@
 import React from "react";
-import {Helmet} from 'react-helmet'
+import { Helmet } from "react-helmet";
 import Header from "../components/Header";
 import { authStore } from "../store";
 
@@ -10,14 +10,26 @@ function Contact() {
     <>
       <Helmet>
         <title>Есть вопросы?</title>
-        <meta name="description" content="Свяжитесь с нами через Telegram или почту. Мы готовы ответить на все ваши вопросы по нейросети Hunt AI." />
-        <meta name="keywords" content="контакты, Hunt AI, Telegram, почта, поддержка, вопросы, нейросеть" />
+        <meta
+          name="description"
+          content="Свяжитесь с нами через Telegram или почту. Мы готовы ответить на все ваши вопросы по нейросети Hunt AI."
+        />
+        <meta
+          name="keywords"
+          content="контакты, Hunt AI, Telegram, почта, поддержка, вопросы, нейросеть"
+        />
         <meta name="robots" content="index, follow" />
         <meta property="og:title" content="Контакты — Hunt AI" />
-        <meta property="og:description" content="Свяжитесь с нами через Telegram или почту. Мы готовы ответить на все ваши вопросы по нейросети Hunt AI." />
+        <meta
+          property="og:description"
+          content="Свяжитесь с нами через Telegram или почту. Мы готовы ответить на все ваши вопросы по нейросети Hunt AI."
+        />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://yourwebsite.com/contact" />
-        <meta property="og:image" content="https://yourwebsite.com/contact-preview.jpg" />
+        <meta
+          property="og:image"
+          content="https://0mzwj77k-5500.inc1.devtunnels.ms/preview.png"
+        />
         <link rel="canonical" href="https://yourwebsite.com/contact" />
       </Helmet>
 

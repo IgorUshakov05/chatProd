@@ -19,10 +19,7 @@ const AboutMePage: React.FC = () => {
           content="Игорь Ушаков, веб-разработчик, MERN, React, Node.js, Express.js, TypeScript, GitHub, портфолио"
         />
         <meta name="robots" content="index, follow" />
-        <meta
-          property="og:title"
-          content="Кто сделал?"
-        />
+        <meta property="og:title" content="Кто сделал?" />
         <meta
           property="og:description"
           content="Я занимаюсь веб-разработкой на стеке MERN и ищу возможности для роста. Мое портфолио доступно на GitHub."
@@ -31,7 +28,7 @@ const AboutMePage: React.FC = () => {
         <meta property="og:url" content="https://yourwebsite.com/developer" />
         <meta
           property="og:image"
-          content="https://yourwebsite.com/igor-ushakov.jpg"
+          content="https://0mzwj77k-5500.inc1.devtunnels.ms/preview.png"
         />
         <link rel="canonical" href="https://yourwebsite.com/developer" />
       </Helmet>

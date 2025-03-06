@@ -25,7 +25,7 @@ const Poprikolu: React.FC = () => {
         <meta property="og:url" content="https://yourwebsite.com/poprikolu" />
         <meta
           property="og:image"
-          content="https://yourwebsite.com/poprikolu-preview.jpg"
+          content="https://0mzwj77k-5500.inc1.devtunnels.ms/preview.png"
         />
         <link rel="canonical" href="https://yourwebsite.com/poprikolu" />
       </Helmet>

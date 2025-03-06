@@ -7,7 +7,7 @@ import { insert_message_to_chat_on_id } from "../../database/Request/Chat";
 const initSocket = (server: any) => {
   const io = new Server(server, {
     cors: {
-      origin: "http://localhost:3000",
+      origin: process.env.CLIENT_URL || "http://localhost:3000",
       methods: ["GET", "POST"],
     },
   });
