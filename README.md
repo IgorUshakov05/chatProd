@@ -1,9 +1,9 @@
 
 
-![Logo](https://github.com/IgorUshakov05/Web-Chat-With-AI/blob/main/frontend/public/WebHunt.png?raw=true)
+![Logo](https://chat.webhunt.ru/preview.png)
 
 
-# Web Chat With AI
+# [Web Chat With AI](https://chat.webhunt.ru)
 
 Чата с использованием искусственного интеллекта.
 
