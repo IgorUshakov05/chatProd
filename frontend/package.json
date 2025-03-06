@@ -27,10 +27,11 @@
     "typescript": "^5.7.3"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set PORT=5500 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prod":"react-scripts build & cd build & python3 -m http.server 5500"
   },
   "eslintConfig": {
     "extends": [

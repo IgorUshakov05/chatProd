@@ -1,0 +1,34 @@
+name: Deploy React App to Netlify
+
+on:
+  push:
+    branches:
+      - main  # или ваша ветка, на которой вы хотите запускать действия
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout репозиторий
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Установить Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'  # Укажите вашу версию Node.js
+    
+      # Переходим в Frontend
+      - name: "To frontend"
+        run: cd frontend
+        
+      # Установить зависимости
+      - name: Install dependencies
+        run: npm install
+
+      # Собирать приложение
+      - name: Build
+        run: npm run build
+     
