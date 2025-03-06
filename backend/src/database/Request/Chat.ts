@@ -1,20 +1,6 @@
 import Chat from "../Schema/ChatSchema";
 import User from "../Schema/UserSchema";
 
-import { Types, Document } from "mongoose";
-
-interface IMessage {
-  sender: string;
-  timestamp: NativeDate;
-  text?: string | null;
-}
-
-interface IChat extends Document {
-  id: string;
-  message: IMessage[];
-}
-
-// Модифицированная функция для поиска чата
 export const find_chat_by_id = async (id: string) => {
   try {
     // Применяем правильную типизацию для найденного чата
