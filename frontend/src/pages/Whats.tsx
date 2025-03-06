@@ -22,12 +22,12 @@ const Poprikolu: React.FC = () => {
           content="Используйте Hunt AI для генерации текста. Бесплатный доступ и поддержка русского языка."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://yourwebsite.com/poprikolu" />
+        <meta property="og:url" content="https://chat.webhunt.ru/poprikolu" />
         <meta
           property="og:image"
-          content="https://0mzwj77k-5500.inc1.devtunnels.ms/preview.png"
+          content="https://chat.webhunt.ru/preview.png"
         />
-        <link rel="canonical" href="https://yourwebsite.com/poprikolu" />
+        <link rel="canonical" href="https://chat.webhunt.ru/poprikolu" />
       </Helmet>
 
       <div className="flex flex-col min-h-screen bg-gray-900 text-white">

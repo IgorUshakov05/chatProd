@@ -25,12 +25,12 @@ const AboutMePage: React.FC = () => {
           content="Я занимаюсь веб-разработкой на стеке MERN и ищу возможности для роста. Мое портфолио доступно на GitHub."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://yourwebsite.com/developer" />
+        <meta property="og:url" content="https://chat.webhunt.ru/developer" />
         <meta
           property="og:image"
-          content="https://0mzwj77k-5500.inc1.devtunnels.ms/preview.png"
+          content="https://chat.webhunt.ru/preview.png"
         />
-        <link rel="canonical" href="https://yourwebsite.com/developer" />
+        <link rel="canonical" href="https://chat.webhunt.ru/developer" />
       </Helmet>
 
       <div className="overflow-hidden">

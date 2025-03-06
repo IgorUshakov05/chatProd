@@ -31,12 +31,12 @@ const HomePage = observer(() => {
           content="Используйте Hunt AI — бесплатную нейросеть на русском языке для генерации текстов и ответов на вопросы."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://yourwebsite.com" />
+        <meta property="og:url" content="https://chat.webhunt.ru/" />
         <meta
           property="og:image"
-          content="https://0mzwj77k-5500.inc1.devtunnels.ms/preview.png"
+          content="https://chat.webhunt.ru/preview.png"
         />
-        <link rel="canonical" href="https://yourwebsite.com" />
+        <link rel="canonical" href="https://chat.webhunt.ru" />
 
         <script>window.yaContextCb=window.yaContextCb||[]</script>
         <script src="https://yandex.ru/ads/system/context.js" async></script>

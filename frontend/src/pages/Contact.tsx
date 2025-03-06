@@ -25,12 +25,12 @@ function Contact() {
           content="Свяжитесь с нами через Telegram или почту. Мы готовы ответить на все ваши вопросы по нейросети Hunt AI."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://yourwebsite.com/contact" />
+        <meta property="og:url" content="https://chat.webhunt.ru/contact" />
         <meta
           property="og:image"
-          content="https://0mzwj77k-5500.inc1.devtunnels.ms/preview.png"
+          content="https://chat.webhunt.ru/preview.png"
         />
-        <link rel="canonical" href="https://yourwebsite.com/contact" />
+        <link rel="canonical" href="https://chat.webhunt.ru/contact" />
       </Helmet>
 
       <div className="overflow-hidden">
